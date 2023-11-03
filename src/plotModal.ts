@@ -1,49 +1,4 @@
 import { App, Editor, Modal, Setting } from "obsidian";
-import { getSVGPlot } from "utils/plot";
-
-type Interval = {
-	from: string;
-	to: string;
-};
-
-type CurveSettings = {
-	t: Interval;
-	expressions: string[];
-};
-
-type SurfaceSettings = {
-	components: string[];
-	u: Interval;
-	v: Interval;
-};
-
-type FunctionSettings = {
-	expression: string;
-	domain: Interval;
-};
-
-type PlotRange = {
-	x: { min: number; max: number };
-	y: { min: number; max: number };
-	z?: { min: number; max: number };
-};
-
-type PlotFunctionSettings = {
-	type: "surface" | "curve" | "function";
-	PlotLabel: string;
-	PlotStyle: "Automatic";
-	Filling: "None";
-	FillingStyle: "None";
-};
-
-type ShowSettings = {
-	PlotRange: "Automatic" | "All" | "Full";
-	Ticks: "None" | "Automatic" | PlotRange;
-};
-
-type Settings = {
-	show: ShowSettings;
-};
 
 export class PlotModal extends Modal {
 	editor: Editor;
@@ -56,24 +11,47 @@ export class PlotModal extends Modal {
 	onOpen(): void {
 		const { contentEl } = this;
 		contentEl.createEl("h1", { text: "Plot " });
-		let exp = "";
-		new Setting(contentEl).setName("Label").addText((text) =>
-			text.onChange((value) => {
-				exp = value;
-			})
-		);
-		new Setting(contentEl).addButton((btn) =>
-			btn
-				.setButtonText("Submit")
-				.setCta()
-				.onClick(async () => {
-					this.close();
-					const line = this.editor.getCursor().line;
-					this.editor.setLine(line, "Loading...");
-
-					this.editor.setLine(line, "```plot-mathematica \n```");
-				})
-		);
+		new Setting(contentEl)
+			.setName("Dimensions")
+			.addDropdown((component) => {
+				component.addOptions({
+					"2D": "2D",
+					"3D": "3D",
+				});
+				component.onChange((value) => this.renderMenu(value, el));
+			});
+		const el = contentEl.createDiv();
+		this.renderMenu("2D", el);
 	}
+
 	onClose(): void {}
+
+	renderMenu(dimensions: string, el: HTMLElement) {
+		el.innerHTML = "";
+		if (dimensions === "2D") {
+			new Setting(el).addButton((btn) =>
+				btn
+					.setButtonText("Submit")
+					.setCta()
+					.onClick(async () => {
+						this.close();
+						const line = this.editor.getCursor().line;
+						this.editor.setLine(
+							line,
+							`\`\`\`plot-mathematica \n ${JSON.stringify(
+								{
+									type: "2D",
+									surface: [
+										{ expression: "x^2 + 2", color: "Red" },
+									],
+									something_else: "h",
+								},
+								null,
+								4
+							)}\`\`\``
+						);
+					})
+			);
+		}
+	}
 }

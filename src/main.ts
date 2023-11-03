@@ -1,8 +1,7 @@
-import { Plugin } from "obsidian";
+import { buildBase64URL, parseCodeBlock } from "./utils/plot";
+import { Plugin, Platform } from "obsidian";
 import { PlotModal } from "plotModal";
-import { getSVGPlot } from "utils/plot";
-
-// Remember to rename these classes and interfaces!
+import { getBase64Plot } from "utils/plot";
 
 interface MyPluginSettings {
 	mySetting: string;
@@ -16,27 +15,30 @@ export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
 
 	async onload() {
+		if (Platform.isMobile) return;
 		await this.loadSettings();
 		this.addCommand({
 			id: "plot-graph",
 			name: "Plot Graph",
-			editorCallback: (editor, ctx) => {
+			editorCallback: (editor) => {
 				new PlotModal(this.app, editor).open();
 			},
 		});
 		this.registerMarkdownCodeBlockProcessor(
 			"plot-mathematica",
-			async (source, el, ctx) => {
-				console.log("hello world");
-				el.innerHTML = "LOADING...";
-				const plot = await getSVGPlot(
-					`Show[ParametricPlot3D[{v*Cos[u], v*Sin[u], Sqrt[1 - v^2]},{u, 0, 2Pi}, {v, 0 ,1}, PlotRange -> {-2, 2}, Background -> Transparent], ParametricPlot3D[{Cos[u], Sin[u], 0}, {u, 0 , 2Pi}]]`
-				);
-				const image = `<img src="data:image/png;base64,${plot.replace(
-					/\s/g,
-					""
-				)}" />`;
-				el.innerHTML = image;
+			async (source, el) => {
+				el.innerHTML = "Loading...";
+				const mathematicaCode = parseCodeBlock(source);
+				const { base64, error } = await getBase64Plot(mathematicaCode);
+
+				console.log("error is: ", error);
+
+				if (error) return (el.innerHTML = error);
+				el.innerHTML = "";
+				const src = buildBase64URL(base64, "png");
+				const img = document.createElement("img");
+				img.src = src;
+				el.appendChild(img);
 			}
 		);
 	}
