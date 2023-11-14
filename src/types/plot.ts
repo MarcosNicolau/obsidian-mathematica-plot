@@ -21,7 +21,6 @@ export type PlotOptions2D = {
 };
 
 export type PlotOptions3D = PlotOptions2D & {
-	boxed: boolean;
 	boundaryStyle: string;
 };
 
@@ -61,6 +60,7 @@ export type GeneralSettings = {
 	axesLabel: AxesLabel;
 	frame: boolean;
 	frameLabel: string;
+	boxed: string;
 };
 
 export type Functions = {

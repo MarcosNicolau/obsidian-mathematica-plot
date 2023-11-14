@@ -97,13 +97,13 @@ export const mathematicaParser2D = (settings: Settings) => {
 
 export const mathematicaParser3D = (settings: Settings) => {
 	const scalarFields3D =
-		settings.scalarFields3D.map((fn) =>
+		settings.scalarFields3D?.map((fn) =>
 			mathematicaPlotParser.scalarField3D(fn)
 		) || [];
 	const curves =
-		settings.curves3D.map((fn) => mathematicaPlotParser.curve3D(fn)) || [];
+		settings.curves3D?.map((fn) => mathematicaPlotParser.curve3D(fn)) || [];
 	const surfaces =
-		settings.surfaces.map((fn) => mathematicaPlotParser.surface(fn)) || [];
+		settings.surfaces?.map((fn) => mathematicaPlotParser.surface(fn)) || [];
 
 	return rasterizeParser(
 		[...curves, ...surfaces, ...scalarFields3D].join(),
