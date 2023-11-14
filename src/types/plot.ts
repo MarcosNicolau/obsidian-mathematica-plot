@@ -56,19 +56,31 @@ export type AxesLabel = {
 	z: string;
 };
 
-export type Settings = {
-	type: "2D" | "3D";
-	surfaces: Surface[];
-	curves: Curve[];
-	scalarFields3D: ScalarFields3D[];
-	scalarFields2D: ScalarFields2D[];
-	dimensions: {
-		height: string;
-		width: string;
-	};
+export type GeneralSettings = {
 	axes: boolean;
 	axesLabel: AxesLabel;
 	frame: boolean;
 	frameLabel: string;
+};
+
+export type Functions = {
+	surfaces: Surface[];
+	curves2D: Curve[];
+	curves3D: Curve[];
+	scalarFields3D: ScalarFields3D[];
+	scalarFields2D: ScalarFields2D[];
+};
+
+export type RasterizeSettings = {
+	type: "2D" | "3D";
 	background: string;
+	dimensions: {
+		height: string;
+		width: string;
+	};
+};
+
+export type Settings = Functions & {
+	raster: RasterizeSettings;
+	general: GeneralSettings;
 };

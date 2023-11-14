@@ -28,12 +28,10 @@ export default class MyPlugin extends Plugin {
 			"plot-mathematica",
 			async (source, el) => {
 				el.innerHTML = "Loading...";
-				const mathematicaCode = parseCodeBlock(source);
-				const { base64, error } = await getBase64Plot(mathematicaCode);
-
-				console.log("error is: ", error);
-
-				if (error) return (el.innerHTML = error);
+				const { code, error: error1 } = parseCodeBlock(source);
+				if (error1) return (el.innerHTML = error1);
+				const { base64, error: error2 } = await getBase64Plot(code);
+				if (error2) return (el.innerHTML = error2);
 				el.innerHTML = "";
 				const src = buildBase64URL(base64, "png");
 				const img = document.createElement("img");
