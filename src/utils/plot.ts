@@ -28,6 +28,7 @@ export const parseCodeBlock = (
 
 		return { code: parsedCode.replace(/\s/g, ""), error: "" };
 	} catch (err) {
+		console.log(err);
 		return { error: err.message, code: "" };
 	}
 };

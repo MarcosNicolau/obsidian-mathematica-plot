@@ -9,7 +9,7 @@ export type PlotRange3D = PlotRange2D & {
 
 export type PlotRange2D = {
 	x: Interval;
-	y: Interval;
+	y?: Interval;
 };
 
 export type PlotOptions2D = {
@@ -40,7 +40,7 @@ export type Surface = {
 export type ScalarFields2D = {
 	expression: string;
 	plotRange: PlotRange2D;
-	options: PlotOptions2D;
+	options: Partial<PlotOptions2D>;
 };
 
 export type ScalarFields3D = {
@@ -57,10 +57,10 @@ export type AxesLabel = {
 
 export type GeneralSettings = {
 	axes: boolean;
-	axesLabel: AxesLabel;
+	axesLabel?: AxesLabel;
 	frame: boolean;
-	frameLabel: string;
-	boxed: string;
+	frameLabel?: string;
+	boxed?: boolean;
 };
 
 export type Functions = {

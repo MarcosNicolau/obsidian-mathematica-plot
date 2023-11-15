@@ -9,6 +9,8 @@ import {
 	Surface,
 } from "../types/plot";
 
+const parseTrueFalse = (value: any) => (value ? "True" : "False");
+
 const mathematicaOptionsParser: {
 	[key in
 		| keyof PlotOptions3D
@@ -21,11 +23,11 @@ const mathematicaOptionsParser: {
 	filling: (value: string) => `Filling -> ${value}`,
 	fillingStyle: (value: string) => `FillingStyle -> ${value}`,
 	plotStyle: (value: string) => `PlotStyle -> ${value}`,
-	boxed: (value: string) => `Boxed -> ${value}`,
+	boxed: (value: string) => `Boxed -> ${parseTrueFalse(value)}`,
 	boundaryStyle: (value: string) => `BoundaryStyle -> ${value}`,
-	axes: (value: string) => `Axes -> ${value}`,
+	axes: (value: string) => `Axes -> ${parseTrueFalse(value)}`,
 	axesLabel: (value: string) => `AxesLabel -> ${value}`,
-	frame: (value: string) => `Frame -> ${value}`,
+	frame: (value: string) => `Frame -> ${parseTrueFalse(value)}`,
 	frameLabel: (value: string) => `FrameLabel -> ${value}`,
 };
 

@@ -1,6 +1,6 @@
 import { buildBase64URL, parseCodeBlock } from "./utils/plot";
 import { Plugin, Platform } from "obsidian";
-import { PlotModal } from "plotModal";
+import { PlotModal } from "modal/plotModal";
 import { getBase64Plot } from "utils/plot";
 
 interface MyPluginSettings {
