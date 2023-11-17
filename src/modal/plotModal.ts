@@ -1,10 +1,8 @@
-import { graphPreview } from "./helpers";
 import {
-	Menu2D,
-	Menu3D,
+	graphPreview,
 	displayGeneralSettings,
 	displayRasterSettings,
-} from "modal/helpers";
+} from "./menus";
 import { App, Editor, Modal } from "obsidian";
 import { Settings } from "types/plot";
 
@@ -50,17 +48,10 @@ export class PlotModal extends Modal {
 		});
 		const settings = flex.createDiv();
 		const preview = flex.createDiv();
-		displayRasterSettings(settings, this.settings, this.renderMenu);
 		displayGeneralSettings(settings, this.settings);
-		displayGeneralSettings(settings, this.settings);
+		displayRasterSettings(settings, this);
 		graphPreview(preview, this);
 	}
 
 	onClose(): void {}
-
-	renderMenu(dimensions: string, el: HTMLElement) {
-		el.innerHTML = "";
-		if (dimensions === "2D") Menu2D(el, this, this.editor, this.settings);
-		if (dimensions === "3D") Menu3D(el, this, this.editor, this.settings);
-	}
 }
