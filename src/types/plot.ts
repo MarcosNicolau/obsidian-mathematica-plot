@@ -27,13 +27,13 @@ export type PlotOptions3D = PlotOptions2D & {
 export type Curve = {
 	components: string[];
 	t: Interval;
-	options: PlotOptions3D;
+	options: Partial<PlotOptions3D>;
 };
 
 export type Surface = {
 	components: string[];
 	u: Interval;
-	options: PlotOptions3D;
+	options: Partial<PlotOptions3D>;
 	v: Interval;
 };
 
@@ -46,7 +46,7 @@ export type ScalarFields2D = {
 export type ScalarFields3D = {
 	expression: string;
 	plotRange: PlotRange3D;
-	options: PlotOptions3D;
+	options: Partial<PlotOptions3D>;
 };
 
 export type AxesLabel = {
