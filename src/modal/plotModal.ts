@@ -9,8 +9,6 @@ import { Settings } from "types/plot";
 export class PlotModal extends Modal {
 	editor: Editor;
 	settings: Settings = {
-		curves2D: [],
-		curves3D: [],
 		general: {
 			axes: true,
 			frame: true,
@@ -24,15 +22,19 @@ export class PlotModal extends Modal {
 				width: "200",
 			},
 		},
-		scalarFields2D: [
-			{
-				expression: "x^2",
-				options: { plotStyle: "Red" },
-				plotRange: { x: { min: "0", max: "10" } },
-			},
-		],
-		scalarFields3D: [],
-		surfaces: [],
+		graphs: {
+			dim2: [
+				{
+					type: "scalarField",
+					scalarField: {
+						expression: "x^2",
+						options: { plotStyle: "Red" },
+						plotRange: { x: { min: "0", max: "10" } },
+					},
+				},
+			],
+			dim3: [],
+		},
 	};
 
 	constructor(app: App, editor: Editor) {

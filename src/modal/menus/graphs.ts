@@ -18,11 +18,11 @@ export const displayGraphSettings: PlotMenu = (el, modal) => {
 				const line = modal.editor.getCursor().line;
 				modal.editor.setLine(
 					line,
-					`\`\`\`plot-mathematica \n ${JSON.stringify(
+					`\`\`\`plot-mathematica \n${JSON.stringify(
 						modal.settings,
 						null,
 						4
-					)}\`\`\``
+					)} \n\`\`\``
 				);
 			})
 	);
@@ -57,48 +57,51 @@ export const display2DSettings: PlotMenu = (el, modal) => {
 	let currentGraphKey = 0;
 	let count = 0;
 	let opts: DropdownComponent;
-	new Setting(el).setName("Graphs").addDropdown((component) => {
-		opts = component;
-		component
-			.addOptions({
-				"0": `graph_${currentGraphKey}`,
-				add: "+ add",
-			})
-			.onChange((value) => {
-				if (value === "add") {
-					count += 1;
-					graphs[count] = default2DGraph;
-					const name = `graph_${count}`;
-					component.addOption(count.toString(), name);
-					// Removing and re-adding the add field to keep it at the end
-					component.selectEl.remove(component.selectEl.selectedIndex);
-					component.addOption("add", "+ add");
-					component.setValue(count.toString());
-					renderGraphSettings();
-				} else {
-					currentGraphKey = Number(value);
-					renderGraphSettings();
-				}
-			});
-	});
+	new Setting(el)
+		.setName("Graphs")
+		.addDropdown((component) => {
+			opts = component;
+			component
+				.addOptions({
+					"0": `graph_${currentGraphKey}`,
+					add: "+ add",
+				})
+				.onChange((value) => {
+					if (value === "add") {
+						count += 1;
+						graphs[count] = default2DGraph;
+						const name = `graph_${count}`;
+						component.addOption(count.toString(), name);
+						// Removing and re-adding the add field to keep it at the end
+						component.selectEl.remove(
+							component.selectEl.selectedIndex
+						);
+						component.addOption("add", "+ add");
+						component.setValue(count.toString());
+						renderGraphSettings();
+					} else {
+						currentGraphKey = Number(value);
+						renderGraphSettings();
+					}
+				});
+		})
+		.addButton((component) =>
+			component
+				.setButtonText("Delete")
+				.setWarning()
+				.onClick((e) => {
+					e.preventDefault();
+					if (opts.selectEl.options.length === 2) return;
+					delete graphs[currentGraphKey];
+					opts.selectEl.remove(opts.selectEl.selectedIndex);
+					currentGraphKey = Number(
+						opts.selectEl.options[opts.selectEl.length - 2].value
+					);
+					opts.setValue(currentGraphKey.toString());
+				})
+		);
 
 	const currentGraphEl = el.createDiv();
-
-	new Setting(el.createDiv()).addButton((component) =>
-		component
-			.setButtonText("Delete")
-			.setWarning()
-			.onClick((e) => {
-				e.preventDefault();
-				if (opts.selectEl.options.length === 2) return;
-				delete graphs[currentGraphKey];
-				opts.selectEl.remove(opts.selectEl.selectedIndex);
-				currentGraphKey = Number(
-					opts.selectEl.options[opts.selectEl.length - 2].value
-				);
-				opts.setValue(currentGraphKey.toString());
-			})
-	);
 
 	const renderGraphSettings = () => {
 		currentGraphEl.innerHTML = "";

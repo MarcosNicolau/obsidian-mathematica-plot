@@ -63,12 +63,21 @@ export type GeneralSettings = {
 	boxed?: boolean;
 };
 
-export type Functions = {
-	surfaces: Surface[];
-	curves2D: Curve[];
-	curves3D: Curve[];
-	scalarFields3D: ScalarFields3D[];
-	scalarFields2D: ScalarFields2D[];
+export type Graph2DTypes = "curve" | "scalarField";
+export type Graph3DTypes = Graph2DTypes | "surface";
+
+export type Graphs = {
+	dim2: {
+		type: Graph2DTypes;
+		curve?: Curve;
+		scalarField?: ScalarFields2D;
+	}[];
+	dim3: {
+		type: Graph3DTypes;
+		scalarField?: ScalarFields3D;
+		surface?: Surface;
+		curve?: Curve;
+	}[];
 };
 
 export type RasterizeSettings = {
@@ -80,7 +89,8 @@ export type RasterizeSettings = {
 	};
 };
 
-export type Settings = Functions & {
+export type Settings = {
 	raster: RasterizeSettings;
 	general: GeneralSettings;
+	graphs: Graphs;
 };
