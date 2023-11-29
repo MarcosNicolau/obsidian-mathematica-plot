@@ -3,8 +3,8 @@ export type Interval = {
 	max: string;
 };
 
-export type PlotRange3D = PlotRange2D & {
-	z: Interval;
+export type PlotRange3D = Required<PlotRange2D> & {
+	z?: Interval;
 };
 
 export type PlotRange2D = {

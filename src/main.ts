@@ -39,7 +39,20 @@ const defaultPlotSettings: Settings = {
 				options: {},
 			},
 		],
-		dim3: [],
+		dim3: [
+			{
+				id: "graph_0",
+				type: "plot",
+				plot: {
+					expression: "",
+					plotRange: {
+						x: { min: "", max: "" },
+						y: { min: "", max: "" },
+					},
+				},
+				options: {},
+			},
+		],
 	},
 };
 

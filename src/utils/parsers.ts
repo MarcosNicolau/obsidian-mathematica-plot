@@ -76,7 +76,7 @@ const mathematicaPlotParser3D = {
 	plot: (scalarField: Plot3D, opts: Options3D) => {
 		const { expression, plotRange } = scalarField;
 		const options = parseOptions(opts);
-		return `Plot3D[${expression}, PlotRange -> {{${plotRange.x.min}, ${plotRange.x.max}}, {${plotRange.y?.min}, ${plotRange.y?.max}}, {${plotRange.z.min}, ${plotRange.z.max}}} ${options}]`;
+		return `Plot3D[${expression}, {x, ${plotRange.x.min}, ${plotRange.x.max}}, {y, ${plotRange.y.min}, ${plotRange.y.max}} ${options}]`;
 	},
 };
 

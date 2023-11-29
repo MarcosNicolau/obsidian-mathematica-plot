@@ -6,6 +6,8 @@ import { Settings } from "types/plot";
 export const getBase64Plot = async (
 	plot: string
 ): Promise<{ error: string; base64: string }> => {
+	console.log(plot);
+
 	const { stdout, stderr } = await promisify(exec)(
 		`wolframscript --code 'ExportString[${plot}, {"Base64", "PNG"}]'`
 	);
