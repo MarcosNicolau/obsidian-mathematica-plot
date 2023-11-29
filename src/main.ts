@@ -2,6 +2,7 @@ import { buildBase64URL, parseCodeBlock } from "./utils/plot";
 import { Plugin, Platform } from "obsidian";
 import { PlotModal } from "modal/plotModal";
 import { getBase64Plot } from "utils/plot";
+import { Settings } from "types/plot";
 
 interface MyPluginSettings {
 	mySetting: string;
@@ -9,6 +10,37 @@ interface MyPluginSettings {
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
 	mySetting: "default",
+};
+
+const defaultPlotSettings: Settings = {
+	general: {
+		axes: "True",
+		axesLabel: "{x, y}",
+		frame: false,
+		boxed: true,
+	},
+	raster: {
+		type: "2D",
+		background: "None",
+		dimensions: {
+			height: "250",
+			width: "200",
+		},
+	},
+	graphs: {
+		dim2: [
+			{
+				id: "graph_0",
+				type: "plot",
+				plot: {
+					expression: "x^2",
+					plotRange: { x: { min: "0", max: "10" } },
+				},
+				options: { plotStyle: "Red" },
+			},
+		],
+		dim3: [],
+	},
 };
 
 export default class MyPlugin extends Plugin {
@@ -21,7 +53,7 @@ export default class MyPlugin extends Plugin {
 			id: "plot-graph",
 			name: "Plot Graph",
 			editorCallback: (editor) => {
-				new PlotModal(this.app, editor).open();
+				new PlotModal(this.app, editor, defaultPlotSettings).open();
 			},
 		});
 		this.registerMarkdownCodeBlockProcessor(

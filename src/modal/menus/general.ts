@@ -1,5 +1,6 @@
-import { GeneralSettings, Settings } from "types/plot";
+import { GeneralSettings } from "types/plot";
 import { Setting } from "obsidian";
+import { PlotModal } from "modal/plotModal";
 
 const generalSettings: {
 	[key in keyof GeneralSettings]: {
@@ -11,7 +12,6 @@ const generalSettings: {
 } = {
 	axes: {
 		desc: "",
-		isToggle: true,
 		name: "Axes",
 	},
 	axesLabel: {
@@ -33,7 +33,8 @@ const generalSettings: {
 	},
 };
 
-export const displayGeneralSettings = (el: HTMLElement, settings: Settings) => {
+export const renderGeneralSettings = (el: HTMLElement, modal: PlotModal) => {
+	const settings = modal.settings;
 	el.createEl("h5", { text: "General settings" });
 	Object.entries(generalSettings).forEach((setting, index) => {
 		const fieldName = setting[0];

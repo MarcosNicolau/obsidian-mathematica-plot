@@ -1,9 +1,13 @@
-import { displayGraphSettings } from "modal/menus/graphs";
 import { PlotModal } from "modal/plotModal";
 import { Setting } from "obsidian";
 import { RasterizeSettings } from "types/plot";
+import { renderGraphSettings } from "modal/menus";
 
-export const displayRasterSettings = (el: HTMLElement, modal: PlotModal) => {
+export const renderRasterSettings = (
+	el: HTMLElement,
+	graphSettingsEl: HTMLElement,
+	modal: PlotModal
+) => {
 	const settings = modal.settings;
 	el.createEl("h5", { text: "Raster settings" });
 	new Setting(el).setName("Type").addDropdown((component) => {
@@ -13,7 +17,7 @@ export const displayRasterSettings = (el: HTMLElement, modal: PlotModal) => {
 		});
 		component.onChange((value: RasterizeSettings["type"]) => {
 			settings.raster.type = value;
-			displayGraphSettings(menuEl, modal);
+			renderGraphSettings(graphSettingsEl, modal);
 		});
 	});
 	new Setting(el.createDiv())
@@ -39,6 +43,4 @@ export const displayRasterSettings = (el: HTMLElement, modal: PlotModal) => {
 				.onChange((value) => (settings.raster.dimensions.width = value))
 		)
 		.setName("Width");
-	const menuEl = el.createDiv();
-	displayGraphSettings(menuEl, modal);
 };

@@ -1,45 +1,15 @@
-import {
-	graphPreview,
-	displayGeneralSettings,
-	displayRasterSettings,
-} from "./menus";
+import { renderGraphPreview, renderSettings } from "./menus";
 import { App, Editor, Modal } from "obsidian";
 import { Settings } from "types/plot";
 
 export class PlotModal extends Modal {
 	editor: Editor;
-	settings: Settings = {
-		general: {
-			axes: true,
-			frame: true,
-			boxed: true,
-		},
-		raster: {
-			type: "2D",
-			background: "None",
-			dimensions: {
-				height: "250",
-				width: "200",
-			},
-		},
-		graphs: {
-			dim2: [
-				{
-					type: "scalarField",
-					scalarField: {
-						expression: "x^2",
-						options: { plotStyle: "Red" },
-						plotRange: { x: { min: "0", max: "10" } },
-					},
-				},
-			],
-			dim3: [],
-		},
-	};
+	settings: Settings;
 
-	constructor(app: App, editor: Editor) {
+	constructor(app: App, editor: Editor, settings: Settings) {
 		super(app);
 		this.editor = editor;
+		this.settings = settings;
 	}
 
 	onOpen(): void {
@@ -50,9 +20,8 @@ export class PlotModal extends Modal {
 		});
 		const settings = flex.createDiv();
 		const preview = flex.createDiv();
-		displayGeneralSettings(settings, this.settings);
-		displayRasterSettings(settings, this);
-		graphPreview(preview, this);
+		renderSettings(settings, this);
+		renderGraphPreview(preview, this);
 	}
 
 	onClose(): void {}

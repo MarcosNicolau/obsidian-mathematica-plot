@@ -12,72 +12,71 @@ export type PlotRange2D = {
 	y?: Interval;
 };
 
-export type PlotOptions2D = {
-	plotLabel: string;
-	clippingStyle: string;
+export type Options2D = {
+	plotStyle: string;
+	plotLabels: string;
+	plotLegends: string;
 	filling: string;
 	fillingStyle: string;
-	plotStyle: string;
+	others: string;
 };
 
-export type PlotOptions3D = PlotOptions2D & {
+export type Options3D = Options2D & {
 	boundaryStyle: string;
 };
 
-export type Curve = {
+export type ParametricPlot2D = {
 	components: string[];
 	t: Interval;
-	options: Partial<PlotOptions3D>;
 };
 
-export type Surface = {
+export type ParametricPlot3D = {
 	components: string[];
 	u: Interval;
-	options: Partial<PlotOptions3D>;
-	v: Interval;
+	options: Partial<Options3D>;
+	v?: Interval;
 };
 
-export type ScalarFields2D = {
+export type Plot2D = {
 	expression: string;
 	plotRange: PlotRange2D;
-	options: Partial<PlotOptions2D>;
 };
 
-export type ScalarFields3D = {
+export type Plot3D = {
 	expression: string;
 	plotRange: PlotRange3D;
-	options: Partial<PlotOptions3D>;
-};
-
-export type AxesLabel = {
-	x: string;
-	y: string;
-	z: string;
 };
 
 export type GeneralSettings = {
-	axes: boolean;
-	axesLabel?: AxesLabel;
+	axes: string;
+	axesLabel?: string;
 	frame: boolean;
 	frameLabel?: string;
 	boxed?: boolean;
 };
 
-export type Graph2DTypes = "curve" | "scalarField";
-export type Graph3DTypes = Graph2DTypes | "surface";
+export type Graph2DTypes = "plot" | "parametricPlot";
+export type Graph3DTypes = Graph2DTypes;
+
+export type Graph2D = {
+	type: Graph2DTypes;
+	id: string;
+	parametricPlot?: ParametricPlot2D;
+	plot?: Plot2D;
+	options: Partial<Options2D>;
+};
+
+export type Graph3D = {
+	type: Graph3DTypes;
+	id: string;
+	plot?: Plot3D;
+	parametricPlot?: ParametricPlot3D;
+	options: Partial<Options3D>;
+};
 
 export type Graphs = {
-	dim2: {
-		type: Graph2DTypes;
-		curve?: Curve;
-		scalarField?: ScalarFields2D;
-	}[];
-	dim3: {
-		type: Graph3DTypes;
-		scalarField?: ScalarFields3D;
-		surface?: Surface;
-		curve?: Curve;
-	}[];
+	dim2: Graph2D[];
+	dim3: Graph3D[];
 };
 
 export type RasterizeSettings = {

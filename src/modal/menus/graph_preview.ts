@@ -1,7 +1,7 @@
 import { PlotModal } from "modal/plotModal";
 import { buildBase64URL, getBase64Plot, parseCodeBlock } from "utils/plot";
 
-export const graphPreview = async (
+export const renderGraphPreview = async (
 	el: HTMLElement,
 	{ settings }: PlotModal
 ) => {

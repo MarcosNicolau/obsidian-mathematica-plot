@@ -1,89 +1,87 @@
 import {
-	Curve,
+	ParametricPlot2D,
 	GeneralSettings,
 	Graph2DTypes,
 	Graph3DTypes,
-	PlotOptions2D,
-	PlotOptions3D,
-	ScalarFields2D,
-	ScalarFields3D,
+	Options2D,
+	Options3D,
+	Plot2D,
+	Plot3D,
 	Settings,
-	Surface,
+	ParametricPlot3D,
 } from "../types/plot";
 
 const parseTrueFalse = (value: any) => (value ? "True" : "False");
 
 const mathematicaOptionsParser: {
 	[key in
-		| keyof PlotOptions3D
+		| keyof Options3D
 		| keyof Omit<GeneralSettings, "dimensions" | "type">]: (
 		value: string
 	) => string;
 } = {
-	plotLabel: (value: string) => `PlotLabel -> ${value}`,
-	clippingStyle: (value: string) => `ClippingStyle -> ${value}`,
+	plotLabels: (value: string) => `PlotLabels -> {${value}}`,
+	plotStyle: (value: string) => `PlotStyle -> ${value}`,
 	filling: (value: string) => `Filling -> ${value}`,
 	fillingStyle: (value: string) => `FillingStyle -> ${value}`,
-	plotStyle: (value: string) => `PlotStyle -> ${value}`,
 	boxed: (value: string) => `Boxed -> ${parseTrueFalse(value)}`,
 	boundaryStyle: (value: string) => `BoundaryStyle -> ${value}`,
-	axes: (value: string) => `Axes -> ${parseTrueFalse(value)}`,
+	axes: (value: string) => `Axes -> ${value}`,
 	axesLabel: (value: string) => `AxesLabel -> ${value}`,
 	frame: (value: string) => `Frame -> ${parseTrueFalse(value)}`,
 	frameLabel: (value: string) => `FrameLabel -> ${value}`,
+	plotLegends: (value: string) => `PlotLegends -> ${value}`,
+	others: (value: string) => value,
 };
 
 const parseOptions = (
-	options: Partial<PlotOptions3D | PlotOptions2D | GeneralSettings>
+	options: Partial<Options3D | Options2D | GeneralSettings>
 ) => {
-	return Object.entries(options)
+	const opts = Object.entries(options)
 		.filter((opt) => opt[1])
-		.map((opt: [keyof PlotOptions3D, string]) =>
+		.map((opt: [keyof Options3D, string]) =>
 			mathematicaOptionsParser[opt[0]](opt[1])
 		)
 		.join();
+	if (!opts) return "";
+	else return `,${opts}`;
 };
 
 const mathematicaPlotParser2D = {
-	curve: (curve: Curve) => {
+	parametricPlot: (curve: ParametricPlot2D, opts: Options2D) => {
 		const { components, t } = curve;
-		const options = parseOptions(curve.options);
+		const options = parseOptions(opts);
 		return `ParametricPlot2D[{${components.join()}}, {t, ${t.min}, ${
 			t.max
-		}}, ${options}]`;
+		}} ${options}]`;
 	},
-	scalarField: (scalarField: ScalarFields2D) => {
+	plot: (scalarField: Plot2D, opts: Options2D) => {
 		const { expression, plotRange } = scalarField;
-		const options = parseOptions(scalarField.options);
-		return `Plot[${expression}, {x, ${plotRange.x.min}, ${plotRange.x.max}}, ${options}]`;
+		const options = parseOptions(opts);
+		return `Plot[${expression}, {x, ${plotRange.x.min}, ${plotRange.x.max}} ${options}]`;
 	},
 };
 
 const mathematicaPlotParser3D = {
-	surface: (surface: Surface) => {
+	parametricPlot: (surface: ParametricPlot3D) => {
 		const { components, u, v } = surface;
 		const options = parseOptions(surface.options);
-		return `ParametricPlot3D[{${components.join()}}, {u, ${u.min}, ${
+		const base = `ParametricPlot3D[{${components.join()}}, {u, ${u.min}, ${
 			u.max
-		}}, {v, ${v.min}, ${v.max}}, ${options}]`;
+		}} ${options}]`;
+		if (v) return `${base}, {v, ${v.min}, ${v.max}}`;
+		return base;
 	},
-	curve: (curve: Curve) => {
-		const { components, t } = curve;
-		const options = parseOptions(curve.options);
-		return `ParametricPlot3D[{${components.join()}}, {t, ${t.min}, ${
-			t.max
-		}}, ${options}]`;
-	},
-	scalarField: (scalarField: ScalarFields3D) => {
+	plot: (scalarField: Plot3D, opts: Options3D) => {
 		const { expression, plotRange } = scalarField;
-		const options = parseOptions(scalarField.options);
-		return `Plot3D[${expression}, PlotRange -> {{${plotRange.x.min}, ${plotRange.x.max}}, {${plotRange.y?.min}, ${plotRange.y?.max}}, {${plotRange.z.min}, ${plotRange.z.max}}}, ${options}]`;
+		const options = parseOptions(opts);
+		return `Plot3D[${expression}, PlotRange -> {{${plotRange.x.min}, ${plotRange.x.max}}, {${plotRange.y?.min}, ${plotRange.y?.max}}, {${plotRange.z.min}, ${plotRange.z.max}}} ${options}]`;
 	},
 };
 
 const rasterizeParser = (code: string, settings: Settings) => {
 	const generalOptions = parseOptions(settings.general);
-	return `Rasterize[Show[${code}, ${generalOptions}], ImageSize -> {${
+	return `Rasterize[Show[${code} ${generalOptions}], ImageSize -> {${
 		settings.raster?.dimensions?.width || 250
 	}, ${settings.raster?.dimensions?.height || 200}}, Background -> ${
 		settings.raster.background
@@ -96,11 +94,11 @@ export const mathematicaParser2D = (settings: Settings) => {
 			.filter((graph) => graph.type === type && graph[type])
 			.map((graph) =>
 				//@ts-expect-error we are making sure that scalar fields exists in the filter
-				mathematicaPlotParser2D[type](graph[type])
+				mathematicaPlotParser2D[type](graph[type], graph.options)
 			) || [];
 
 	return rasterizeParser(
-		[...parse2D("curve"), ...parse2D("scalarField")].join(),
+		[...parse2D("plot"), ...parse2D("parametricPlot")].join(),
 		settings
 	);
 };
@@ -111,15 +109,11 @@ export const mathematicaParser3D = (settings: Settings) => {
 			.filter((graph) => graph.type === type && graph[type])
 			.map((graph) =>
 				//@ts-expect-error same as above
-				mathematicaPlotParser3D[type](graph[type])
+				mathematicaPlotParser3D[type](graph[type], graph.options)
 			) || [];
 
 	return rasterizeParser(
-		[
-			...parse3D("curve"),
-			...parse3D("scalarField"),
-			...parse3D("surface"),
-		].join(),
+		[...parse3D("plot"), ...parse3D("parametricPlot")].join(),
 		settings
 	);
 };
