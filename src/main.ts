@@ -5,11 +5,11 @@ import { getBase64Plot } from "utils/plot";
 import { Settings } from "types/plot";
 
 interface MyPluginSettings {
-	mySetting: string;
+	useCloud: boolean;
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: "default",
+	useCloud: false,
 };
 
 const defaultPlotSettings: Settings = {
@@ -33,10 +33,10 @@ const defaultPlotSettings: Settings = {
 				id: "graph_0",
 				type: "plot",
 				plot: {
-					expression: "x^2",
-					plotRange: { x: { min: "0", max: "10" } },
+					expression: "",
+					plotRange: { x: { min: "", max: "" } },
 				},
-				options: { plotStyle: "Red" },
+				options: {},
 			},
 		],
 		dim3: [],

@@ -20,7 +20,7 @@ const mathematicaOptionsParser: {
 		value: string
 	) => string;
 } = {
-	plotLabels: (value: string) => `PlotLabels -> {${value}}`,
+	plotLabels: (value: string) => `PlotLabels -> ${value}`,
 	plotStyle: (value: string) => `PlotStyle -> ${value}`,
 	filling: (value: string) => `Filling -> ${value}`,
 	fillingStyle: (value: string) => `FillingStyle -> ${value}`,
@@ -31,6 +31,7 @@ const mathematicaOptionsParser: {
 	frame: (value: string) => `Frame -> ${parseTrueFalse(value)}`,
 	frameLabel: (value: string) => `FrameLabel -> ${value}`,
 	plotLegends: (value: string) => `PlotLegends -> ${value}`,
+	plotLabel: (value: string) => `PlotLabel -> ${value}`,
 	others: (value: string) => value,
 };
 
@@ -51,7 +52,7 @@ const mathematicaPlotParser2D = {
 	parametricPlot: (curve: ParametricPlot2D, opts: Options2D) => {
 		const { components, t } = curve;
 		const options = parseOptions(opts);
-		return `ParametricPlot2D[{${components.join()}}, {t, ${t.min}, ${
+		return `ParametricPlot[{${components.join()}}, {t, ${t.min}, ${
 			t.max
 		}} ${options}]`;
 	},
@@ -66,7 +67,7 @@ const mathematicaPlotParser3D = {
 	parametricPlot: (surface: ParametricPlot3D) => {
 		const { components, u, v } = surface;
 		const options = parseOptions(surface.options);
-		const base = `ParametricPlot3D[{${components.join()}}, {u, ${u.min}, ${
+		const base = `ParametricPlot[{${components.join()}}, {u, ${u.min}, ${
 			u.max
 		}} ${options}]`;
 		if (v) return `${base}, {v, ${v.min}, ${v.max}}`;

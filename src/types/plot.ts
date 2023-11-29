@@ -53,6 +53,7 @@ export type GeneralSettings = {
 	frame: boolean;
 	frameLabel?: string;
 	boxed?: boolean;
+	plotLabel?: string;
 };
 
 export type Graph2DTypes = "plot" | "parametricPlot";

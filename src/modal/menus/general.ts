@@ -16,12 +16,10 @@ const generalSettings: {
 	},
 	axesLabel: {
 		desc: "",
-		name: "AxesLabel",
+		name: "Axes Label",
 	},
-	boxed: {
-		desc: "",
-		isToggle: true,
-		name: "Boxed",
+	plotLabel: {
+		name: "Label",
 	},
 	frame: {
 		desc: "",
@@ -29,7 +27,12 @@ const generalSettings: {
 		name: "Frame",
 	},
 	frameLabel: {
-		name: "FrameLabel",
+		name: "Frame Label",
+	},
+	boxed: {
+		desc: "",
+		isToggle: true,
+		name: "Boxed",
 	},
 };
 
@@ -44,7 +47,8 @@ export const renderGeneralSettings = (el: HTMLElement, modal: PlotModal) => {
 		if (value.isToggle) {
 			new Setting(elToDisplay)
 				.addToggle((toggle) =>
-					toggle.setValue(true).onChange(
+					//@ts-expect-error the value type is checked based on the toggle or not
+					toggle.setValue(settings.general[fieldName]).onChange(
 						//@ts-expect-error we know that the field name belongs to the general setting options fro
 						(value) => (settings.general[fieldName] = value)
 					)
@@ -54,7 +58,8 @@ export const renderGeneralSettings = (el: HTMLElement, modal: PlotModal) => {
 		} else
 			new Setting(elToDisplay)
 				.addText((text) =>
-					text.setValue(value.value || "").onChange(
+					//@ts-expect-error the value type is checked based on the toggle or not
+					text.setValue(settings.general[fieldName] || "").onChange(
 						//@ts-expect-error we know that the field name belongs to the general setting options fro
 						(value) => (settings.general[fieldName] = value)
 					)

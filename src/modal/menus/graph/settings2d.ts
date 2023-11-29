@@ -28,13 +28,12 @@ const renderOptions = (
 	settings: Settings,
 	options: Graph2D["options"]
 ) => {
-	const optNames: { [key in keyof Options2D]: string } = {
+	const optNames: { [key in keyof Omit<Options2D, "others">]: string } = {
+		plotLabels: "Plot Labels",
+		plotLegends: "Plot Legends",
+		plotStyle: "Plot Style",
 		filling: "Filling",
 		fillingStyle: "Filling Style",
-		plotLabels: "Plot Label",
-		plotStyle: "Plot Style",
-		plotLegends: "Plot Legends",
-		others: "Others",
 	};
 	el.createEl("h5", {
 		text: `Plot Options ${settings.raster.type}`,
@@ -51,6 +50,16 @@ const renderOptions = (
 						})
 				)
 	);
+	new Setting(el.createDiv())
+		.setName("Others")
+		.setDesc(
+			"Add any other option for the plot following the mathematica syntax"
+		)
+		.addTextArea((component) =>
+			component.setValue(options.others || "").onChange((value) => {
+				options.others = value;
+			})
+		);
 };
 
 const renderPlotSettings = (el: HTMLElement, plot: Plot2D) => {
@@ -76,8 +85,29 @@ const renderPlotSettings = (el: HTMLElement, plot: Plot2D) => {
 
 const renderParametricPlotSettings = (
 	el: HTMLElement,
-	curve: ParametricPlot2D
-) => {};
+	parametricPlot: ParametricPlot2D
+) => {
+	new Setting(el.createDiv()).setName("g1(t) = ").addTextArea((component) =>
+		component.setValue(parametricPlot.components[0]).onChange((value) => {
+			parametricPlot.components[0] = value;
+		})
+	);
+	new Setting(el.createDiv()).setName("g2(t) = ").addTextArea((component) =>
+		component.setValue(parametricPlot.components[1]).onChange((value) => {
+			parametricPlot.components[1] = value;
+		})
+	);
+	new Setting(el.createDiv()).setName("t min").addText((component) =>
+		component.setValue(parametricPlot.t.min).onChange((value) => {
+			parametricPlot.t.min = value;
+		})
+	);
+	new Setting(el.createDiv()).setName("t max").addText((component) =>
+		component.setValue(parametricPlot.t.max).onChange((value) => {
+			parametricPlot.t.max = value;
+		})
+	);
+};
 
 export const render2DSettings = (el: HTMLElement, modal: PlotModal) => {
 	const graphs = modal.settings.graphs.dim2;
@@ -155,10 +185,24 @@ export const render2DSettings = (el: HTMLElement, modal: PlotModal) => {
 				});
 			});
 
-		if (graph.type === "parametricPlot" && graph.parametricPlot)
+		if (graph.type === "parametricPlot") {
+			if (!graph.parametricPlot) {
+				graph.parametricPlot = {
+					components: [],
+					t: { min: "", max: "" },
+				};
+			}
 			renderParametricPlotSettings(selectedGraphEl, graph.parametricPlot);
-		if (graph.type === "plot" && graph.plot)
+		}
+		if (graph.type === "plot") {
+			if (!graph.plot) {
+				graph.plot = {
+					expression: "",
+					plotRange: { x: { min: "", max: "" } },
+				};
+			}
 			renderPlotSettings(selectedGraphEl, graph.plot);
+		}
 
 		renderOptions(selectedGraphEl, modal.settings, graph.options);
 	};
