@@ -7,7 +7,7 @@ export const defaultGraph = (id: string): Graph2D => ({
 	id,
 	parametricPlot: {
 		components: [],
-		t: { max: "", min: "" },
+		u: { max: "", min: "" },
 	},
 	plot: {
 		expression: "",
@@ -52,13 +52,13 @@ export const renderParametricPlotSettings = (
 		})
 	);
 	new Setting(el.createDiv()).setName("t min").addText((component) =>
-		component.setValue(parametricPlot.t.min).onChange((value) => {
-			parametricPlot.t.min = value;
+		component.setValue(parametricPlot.u.min).onChange((value) => {
+			parametricPlot.u.min = value;
 		})
 	);
 	new Setting(el.createDiv()).setName("t max").addText((component) =>
-		component.setValue(parametricPlot.t.max).onChange((value) => {
-			parametricPlot.t.max = value;
+		component.setValue(parametricPlot.u.max).onChange((value) => {
+			parametricPlot.u.max = value;
 		})
 	);
 };

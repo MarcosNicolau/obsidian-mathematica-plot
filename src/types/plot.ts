@@ -27,14 +27,13 @@ export type Options3D = Options2D & {
 
 export type ParametricPlot2D = {
 	components: string[];
-	t: Interval;
+	u: Interval;
 };
 
 export type ParametricPlot3D = {
 	components: string[];
 	u: Interval;
-	options: Partial<Options3D>;
-	v?: Interval;
+	v: Interval;
 };
 
 export type Plot2D = {
@@ -50,9 +49,9 @@ export type Plot3D = {
 export type GeneralSettings = {
 	axes: string;
 	axesLabel?: string;
-	frame: boolean;
+	frame: string;
 	frameLabel?: string;
-	boxed?: boolean;
+	boxed?: string;
 	plotLabel?: string;
 };
 

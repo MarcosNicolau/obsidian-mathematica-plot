@@ -9,6 +9,11 @@ export const defaultGraph = (id: string): Graph3D => ({
 		expression: "",
 		plotRange: { x: { min: "", max: "" }, y: { min: "", max: "" } },
 	},
+	parametricPlot: {
+		components: [],
+		u: { min: "", max: "" },
+		v: { min: "", max: "" },
+	},
 	options: {},
 });
 
@@ -47,29 +52,39 @@ export const renderParametricPlotSettings = (
 	el: HTMLElement,
 	parametricPlot: ParametricPlot3D
 ) => {
-	new Setting(el.createDiv()).setName("g1(u) = ").addTextArea((component) =>
+	new Setting(el.createDiv()).setName("g1(u, v) =").addTextArea((component) =>
 		component.setValue(parametricPlot.components[0]).onChange((value) => {
 			parametricPlot.components[0] = value;
 		})
 	);
-	new Setting(el.createDiv()).setName("g2(u) = ").addTextArea((component) =>
+	new Setting(el.createDiv()).setName("g2(u, v) =").addTextArea((component) =>
 		component.setValue(parametricPlot.components[1]).onChange((value) => {
 			parametricPlot.components[1] = value;
 		})
 	);
-	new Setting(el.createDiv()).setName("g3(u) = ").addTextArea((component) =>
+	new Setting(el.createDiv()).setName("g3(u, v) =").addTextArea((component) =>
 		component.setValue(parametricPlot.components[2]).onChange((value) => {
 			parametricPlot.components[2] = value;
 		})
 	);
-	new Setting(el.createDiv()).setName("t min").addText((component) =>
+	new Setting(el.createDiv()).setName("u min").addText((component) =>
 		component.setValue(parametricPlot.u.min).onChange((value) => {
 			parametricPlot.u.min = value;
 		})
 	);
-	new Setting(el.createDiv()).setName("t max").addText((component) =>
+	new Setting(el.createDiv()).setName("u max").addText((component) =>
 		component.setValue(parametricPlot.u.max).onChange((value) => {
 			parametricPlot.u.max = value;
+		})
+	);
+	new Setting(el.createDiv()).setName("v min").addText((component) =>
+		component.setValue(parametricPlot.v.min).onChange((value) => {
+			parametricPlot.v.min = value;
+		})
+	);
+	new Setting(el.createDiv()).setName("v max").addText((component) =>
+		component.setValue(parametricPlot.v.max).onChange((value) => {
+			parametricPlot.v.max = value;
 		})
 	);
 };

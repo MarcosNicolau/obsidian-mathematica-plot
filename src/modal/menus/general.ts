@@ -5,7 +5,6 @@ import { PlotModal } from "modal/plotModal";
 const generalSettings: {
 	[key in keyof GeneralSettings]: {
 		name: string;
-		isToggle?: boolean;
 		value?: string;
 		desc?: string;
 	};
@@ -23,15 +22,13 @@ const generalSettings: {
 	},
 	frame: {
 		desc: "",
-		isToggle: true,
 		name: "Frame",
 	},
 	frameLabel: {
 		name: "Frame Label",
 	},
 	boxed: {
-		desc: "",
-		isToggle: true,
+		desc: "only for 3D graphics",
 		name: "Boxed",
 	},
 };
@@ -44,27 +41,15 @@ export const renderGeneralSettings = (el: HTMLElement, modal: PlotModal) => {
 		const value = setting[1];
 		// This is to ensure a line gets in the header only for the first field.
 		const elToDisplay = index == 0 ? el : el.createDiv();
-		if (value.isToggle) {
-			new Setting(elToDisplay)
-				.addToggle((toggle) =>
-					//@ts-expect-error the value type is checked based on the toggle or not
-					toggle.setValue(settings.general[fieldName]).onChange(
-						//@ts-expect-error we know that the field name belongs to the general setting options fro
-						(value) => (settings.general[fieldName] = value)
-					)
+		new Setting(elToDisplay)
+			.addText((text) =>
+				//@ts-expect-error the value type is checked based on the toggle or not
+				text.setValue(settings.general[fieldName] || "").onChange(
+					//@ts-expect-error we know that the field name belongs to the general setting options
+					(value) => (settings.general[fieldName] = value)
 				)
-				.setName(value.name)
-				.setDesc(value.desc || "");
-		} else
-			new Setting(elToDisplay)
-				.addText((text) =>
-					//@ts-expect-error the value type is checked based on the toggle or not
-					text.setValue(settings.general[fieldName] || "").onChange(
-						//@ts-expect-error we know that the field name belongs to the general setting options fro
-						(value) => (settings.general[fieldName] = value)
-					)
-				)
-				.setName(value.name)
-				.setDesc(value.desc || "");
+			)
+			.setName(value.name)
+			.setDesc(value.desc || "");
 	});
 };

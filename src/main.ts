@@ -13,19 +13,19 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 };
 
 const defaultPlotSettings: Settings = {
-	general: {
-		axes: "True",
-		axesLabel: "{x, y}",
-		frame: false,
-		boxed: true,
-	},
 	raster: {
 		type: "2D",
 		background: "None",
 		dimensions: {
-			height: "250",
-			width: "200",
+			height: "Automatic",
+			width: "250",
 		},
+	},
+	general: {
+		axes: "True",
+		axesLabel: "{x, y}",
+		frame: "False",
+		boxed: "True",
 	},
 	graphs: {
 		dim2: [
@@ -75,7 +75,10 @@ export default class MyPlugin extends Plugin {
 				el.innerHTML = "Loading...";
 				const { code, error: error1 } = parseCodeBlock(source);
 				if (error1) return (el.innerHTML = error1);
-				const { base64, error: error2 } = await getBase64Plot(code);
+				const { base64, error: error2 } = await getBase64Plot(
+					code,
+					false
+				);
 				if (error2) return (el.innerHTML = error2);
 				el.innerHTML = "";
 				const src = buildBase64URL(base64, "png");

@@ -1,7 +1,7 @@
 import { renders2D } from "modal/menus/graph/settings2d";
 import { renders3D } from "modal/menus/graph/settings3d";
 import { PlotModal } from "modal/plotModal";
-import { DropdownComponent, Setting } from "obsidian";
+import { DropdownComponent, Setting, stringifyYaml } from "obsidian";
 import { Graph2DTypes, Graph3DTypes } from "types/plot";
 
 type RenderType = {
@@ -103,10 +103,18 @@ export const render = (
 
 		if (graph.type === "parametricPlot") {
 			if (!graph.parametricPlot) {
-				graph.parametricPlot = {
-					components: [],
-					t: { min: "", max: "" },
-				};
+				if (type === "2D") {
+					graph.parametricPlot = {
+						components: [],
+						t: { min: "", max: "" },
+					};
+				} else {
+					graph.parametricPlot = {
+						components: [],
+						u: { min: "", max: "" },
+						v: { min: "", max: "" },
+					};
+				}
 			}
 			renderParametricPlotSettings(selectedGraphEl, graph.parametricPlot);
 		}
@@ -140,10 +148,8 @@ export const renderGraphSettings = (el: HTMLElement, modal: PlotModal) => {
 				const line = modal.editor.getCursor().line;
 				modal.editor.setLine(
 					line,
-					`\`\`\`plot-mathematica \n${JSON.stringify(
-						modal.settings,
-						null,
-						4
+					`\`\`\`plot-mathematica \n${stringifyYaml(
+						modal.settings
 					)} \n\`\`\``
 				);
 			})
