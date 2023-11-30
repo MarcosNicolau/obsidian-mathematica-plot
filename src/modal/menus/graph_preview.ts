@@ -5,10 +5,6 @@ export const renderGraphPreview = async (
 	el: HTMLElement,
 	{ settings }: PlotModal
 ) => {
-	el.setAttr(
-		"style",
-		"width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between"
-	);
 	const content = el.createDiv();
 	const graph = el.createDiv();
 
@@ -27,7 +23,7 @@ export const renderGraphPreview = async (
 			JSON.stringify(settings)
 		);
 		if (error1) return (graph.innerHTML = error1);
-		const { base64, error: error2 } = await getBase64Plot(code);
+		const { base64, error: error2 } = await getBase64Plot(code, false);
 		if (error2) return (graph.innerHTML = error2);
 		graph.innerHTML = "";
 		const src = buildBase64URL(base64, "png");

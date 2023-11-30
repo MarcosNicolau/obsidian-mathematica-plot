@@ -14,12 +14,15 @@ export class PlotModal extends Modal {
 
 	onOpen(): void {
 		const { contentEl } = this;
+		this.modalEl.addClass("mathematica-plot-modal");
 		contentEl.createEl("h4", { text: "Plot" });
 		const flex = contentEl.createEl("div", {
-			attr: { style: "display: flex; gap: 16px" },
+			cls: "mathematica-plot-modal-content-container",
 		});
 		const settings = flex.createDiv();
 		const preview = flex.createDiv();
+		settings.addClass("mathematica-plot-modal-settings");
+		preview.addClass("mathematica-plot-modal-preview");
 		renderSettings(settings, this);
 		renderGraphPreview(preview, this);
 	}

@@ -1,8 +1,28 @@
-/*
+.mathematica-plot-modal {
+	width: 50%;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.mathematica-plot-modal .mathematica-plot-modal-settings {
+	max-height: 60vh;
+	overflow-y: auto;
+	width: 100%;
+}
 
-If your plugin does not need CSS, delete this file.
+.mathematica-plot-modal .mathematica-plot-modal-preview {
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+}
 
-*/
+.mathematica-plot-modal .mathematica-plot-modal-content-container {
+	display: flex;
+	gap: 16px;
+}
+
+@media only screen and (max-width: 1300px) {
+	.mathematica-plot-modal {
+		width: 75%;
+	}
+}
