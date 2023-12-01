@@ -17,6 +17,7 @@ export const renderGraphPreview = async (
 		e.preventDefault();
 		renderPreview();
 	});
+	//TODO same logic that the main, put it into a function
 	const renderPreview = async () => {
 		graph.innerHTML = "Loading...";
 		const { code, error: error1 } = parseCodeBlock(

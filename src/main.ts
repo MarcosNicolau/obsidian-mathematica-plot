@@ -27,33 +27,7 @@ const defaultPlotSettings: Settings = {
 		frame: "False",
 		boxed: "True",
 	},
-	graphs: {
-		dim2: [
-			{
-				id: "graph_0",
-				type: "plot",
-				plot: {
-					expression: "",
-					plotRange: { x: { min: "", max: "" } },
-				},
-				options: {},
-			},
-		],
-		dim3: [
-			{
-				id: "graph_0",
-				type: "plot",
-				plot: {
-					expression: "",
-					plotRange: {
-						x: { min: "", max: "" },
-						y: { min: "", max: "" },
-					},
-				},
-				options: {},
-			},
-		],
-	},
+	graphs: [],
 };
 
 export default class MyPlugin extends Plugin {

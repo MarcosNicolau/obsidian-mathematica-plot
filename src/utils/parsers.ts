@@ -50,9 +50,12 @@ const parseOptions = (
 
 const mathematicaPlotParser2D = {
 	parametricPlot: (curve: ParametricPlot2D, opts: Options2D) => {
-		const { components, u } = curve;
+		const {
+			components,
+			domain: { u },
+		} = curve;
 		const options = parseOptions(opts);
-		return `ParametricPlot[{${components.join()}}, {t, ${u.min}, ${
+		return `ParametricPlot[{${components.join()}}, {u, ${u.min}, ${
 			u.max
 		}} ${options}]`;
 	},
@@ -65,7 +68,10 @@ const mathematicaPlotParser2D = {
 
 const mathematicaPlotParser3D = {
 	parametricPlot: (surface: ParametricPlot3D, opts: Options3D) => {
-		const { components, u, v } = surface;
+		const {
+			components,
+			domain: { u, v },
+		} = surface;
 		const options = parseOptions(opts);
 		const base = (v: string) =>
 			`ParametricPlot3D[{${components.join()}}, {u, ${u.min}, ${
@@ -85,18 +91,17 @@ const rasterizeParser = (code: string, settings: Settings) => {
 	const generalOptions = parseOptions(settings.general);
 	return `Rasterize[Show[${code} ${generalOptions}], ImageSize -> {${
 		settings.raster?.dimensions?.width || 250
-	}, ${settings.raster?.dimensions?.height || 200}}, Background -> ${
+	}, ${settings.raster?.dimensions?.height || "Automatic"}}, Background -> ${
 		settings.raster.background
 	}, AspectRatio -> Automatic]`;
 };
 
 export const mathematicaParser2D = (settings: Settings) => {
 	const parse2D = (type: Graph2DTypes) =>
-		settings.graphs.dim2
+		settings.graphs
 			.filter((graph) => graph.type === type)
 			.map((graph) =>
-				//@ts-expect-error we are making sure that graph type exists in the filter
-				mathematicaPlotParser2D[type](graph[type], graph.options)
+				mathematicaPlotParser2D[type](graph, graph.options)
 			) || [];
 
 	return rasterizeParser(
@@ -107,11 +112,10 @@ export const mathematicaParser2D = (settings: Settings) => {
 
 export const mathematicaParser3D = (settings: Settings) => {
 	const parse3D = (type: Graph3DTypes) =>
-		settings.graphs.dim3
+		settings.graphs
 			.filter((graph) => graph.type === type)
 			.map((graph) =>
-				//@ts-expect-error same as above
-				mathematicaPlotParser3D[type](graph[type], graph.options)
+				mathematicaPlotParser3D[type](graph, graph.options)
 			) || [];
 
 	return rasterizeParser(

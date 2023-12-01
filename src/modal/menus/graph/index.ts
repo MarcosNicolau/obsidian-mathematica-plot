@@ -1,7 +1,7 @@
 import { renders2D } from "modal/menus/graph/settings2d";
 import { renders3D } from "modal/menus/graph/settings3d";
 import { PlotModal } from "modal/plotModal";
-import { DropdownComponent, Setting, stringifyYaml } from "obsidian";
+import { DropdownComponent, Setting } from "obsidian";
 import { Graph2DTypes, Graph3DTypes } from "types/plot";
 
 type RenderType = {
@@ -19,16 +19,19 @@ export const render = (
 	modal: PlotModal,
 	type: "2D" | "3D"
 ) => {
-	const graphs = modal.settings.graphs[type === "2D" ? "dim2" : "dim3"];
-	let count = 0;
-	let dropdown: DropdownComponent;
-
 	const {
 		defaultGraph,
 		renderParametricPlotSettings,
 		renderPlotSettings,
 		renderOptions,
 	} = renderType[type];
+
+	modal.settings.graphs = [];
+	modal.settings.graphs[0] = defaultGraph("graph_0");
+
+	const graphs = modal.settings.graphs;
+	let count = 0;
+	let dropdown: DropdownComponent;
 
 	new Setting(el)
 		.setName("Graphs")
@@ -102,30 +105,10 @@ export const render = (
 			});
 
 		if (graph.type === "parametricPlot") {
-			if (!graph.parametricPlot) {
-				if (type === "2D") {
-					graph.parametricPlot = {
-						components: [],
-						t: { min: "", max: "" },
-					};
-				} else {
-					graph.parametricPlot = {
-						components: [],
-						u: { min: "", max: "" },
-						v: { min: "", max: "" },
-					};
-				}
-			}
-			renderParametricPlotSettings(selectedGraphEl, graph.parametricPlot);
+			renderParametricPlotSettings(selectedGraphEl, graph);
 		}
 		if (graph.type === "plot") {
-			if (!graph.plot) {
-				graph.plot = {
-					expression: "",
-					plotRange: { x: { min: "", max: "" } },
-				};
-			}
-			renderPlotSettings(selectedGraphEl, graph.plot);
+			renderPlotSettings(selectedGraphEl, graph);
 		}
 
 		renderOptions(selectedGraphEl, modal.settings, graph.options);
@@ -138,20 +121,4 @@ export const renderGraphSettings = (el: HTMLElement, modal: PlotModal) => {
 	el.innerHTML = "";
 	el.createEl("h5", { text: `Plot ${modal.settings.raster.type}` });
 	render(el, modal, modal.settings.raster.type);
-
-	new Setting(el).addButton((btn) =>
-		btn
-			.setButtonText("Submit")
-			.setCta()
-			.onClick(async () => {
-				modal.close();
-				const line = modal.editor.getCursor().line;
-				modal.editor.setLine(
-					line,
-					`\`\`\`plot-mathematica \n${stringifyYaml(
-						modal.settings
-					)} \n\`\`\``
-				);
-			})
-	);
 };

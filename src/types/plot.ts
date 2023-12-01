@@ -27,13 +27,17 @@ export type Options3D = Options2D & {
 
 export type ParametricPlot2D = {
 	components: string[];
-	u: Interval;
+	domain: {
+		u: Interval;
+	};
 };
 
 export type ParametricPlot3D = {
 	components: string[];
-	u: Interval;
-	v: Interval;
+	domain: {
+		u: Interval;
+		v: Interval;
+	};
 };
 
 export type Plot2D = {
@@ -58,26 +62,30 @@ export type GeneralSettings = {
 export type Graph2DTypes = "plot" | "parametricPlot";
 export type Graph3DTypes = Graph2DTypes;
 
-export type Graph2D = {
-	type: Graph2DTypes;
+export type BuildGraph<
+	Type extends Graph2DTypes | Graph3DTypes,
+	PlotType,
+	Options = Options2D
+> = PlotType & {
 	id: string;
-	parametricPlot?: ParametricPlot2D;
-	plot?: Plot2D;
-	options: Partial<Options2D>;
+	type: Type;
+	options: Partial<Options>;
 };
 
-export type Graph3D = {
-	type: Graph3DTypes;
-	id: string;
-	plot?: Plot3D;
-	parametricPlot?: ParametricPlot3D;
-	options: Partial<Options3D>;
-};
+export type Graph2D =
+	| BuildGraph<"plot", Plot2D>
+	| BuildGraph<"parametricPlot", ParametricPlot2D>;
 
-export type Graphs = {
-	dim2: Graph2D[];
-	dim3: Graph3D[];
-};
+export type Graph3D =
+	| BuildGraph<"plot", Plot3D, Options3D>
+	| BuildGraph<"parametricPlot", ParametricPlot3D, Options3D>;
+
+// 1. Maybe it would be better  to have two separate fields that divide each type of graph, so the types would be easier  to handle
+// 2. But we take this approach to make it more readable to the user when it gets converted to yaml.
+// Though we could take the 1 approach for code readability and simplicity (less typing gymnastics)
+// and then change the structure when copying it to the editor for reason 2. Which would then require to take that structure and cast it back again to this one.
+// But that would be too much work :).
+export type Graphs = Graph2D[] | Graph3D[];
 
 export type RasterizeSettings = {
 	type: "2D" | "3D";
