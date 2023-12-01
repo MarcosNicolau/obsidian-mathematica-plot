@@ -2,17 +2,15 @@ import { buildBase64URL, parseCodeBlock } from "./utils/plot";
 import { Plugin, Platform } from "obsidian";
 import { PlotModal } from "modal/plotModal";
 import { getBase64Plot } from "utils/plot";
-import { Settings } from "types/plot";
+import { PlotSettings } from "types/plot";
+import { MathematicaPlotSettingsTab } from "settingsTab";
+import { MathematicaPlotSettings } from "types/plugin";
 
-interface MyPluginSettings {
-	useCloud: boolean;
-}
-
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: MathematicaPlotSettings = {
 	useCloud: false,
 };
 
-const defaultPlotSettings: Settings = {
+const defaultPlotSettings: PlotSettings = {
 	raster: {
 		type: "2D",
 		background: "None",
@@ -30,8 +28,8 @@ const defaultPlotSettings: Settings = {
 	graphs: [],
 };
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class MathematicaPlot extends Plugin {
+	settings: MathematicaPlotSettings;
 
 	async onload() {
 		if (Platform.isMobile) return;
@@ -40,7 +38,7 @@ export default class MyPlugin extends Plugin {
 			id: "plot-graph",
 			name: "Plot Graph",
 			editorCallback: (editor) => {
-				new PlotModal(this.app, editor, defaultPlotSettings).open();
+				new PlotModal(this, editor, defaultPlotSettings).open();
 			},
 		});
 		this.registerMarkdownCodeBlockProcessor(
@@ -51,7 +49,7 @@ export default class MyPlugin extends Plugin {
 				if (error1) return (el.innerHTML = error1);
 				const { base64, error: error2 } = await getBase64Plot(
 					code,
-					false
+					this.settings.useCloud
 				);
 				if (error2) return (el.innerHTML = error2);
 				el.innerHTML = "";
@@ -61,6 +59,7 @@ export default class MyPlugin extends Plugin {
 				el.appendChild(img);
 			}
 		);
+		this.addSettingTab(new MathematicaPlotSettingsTab(this.app, this));
 	}
 
 	onunload() {}

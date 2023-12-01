@@ -3,7 +3,7 @@ import { buildBase64URL, getBase64Plot, parseCodeBlock } from "utils/plot";
 
 export const renderGraphPreview = async (
 	el: HTMLElement,
-	{ settings }: PlotModal
+	{ settings, plugin }: PlotModal
 ) => {
 	const content = el.createDiv();
 	const graph = el.createDiv();
@@ -24,7 +24,10 @@ export const renderGraphPreview = async (
 			JSON.stringify(settings)
 		);
 		if (error1) return (graph.innerHTML = error1);
-		const { base64, error: error2 } = await getBase64Plot(code, false);
+		const { base64, error: error2 } = await getBase64Plot(
+			code,
+			plugin.settings.useCloud
+		);
 		if (error2) return (graph.innerHTML = error2);
 		graph.innerHTML = "";
 		const src = buildBase64URL(base64, "png");

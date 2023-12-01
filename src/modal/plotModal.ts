@@ -1,13 +1,20 @@
+import MathematicaPlot from "main";
 import { renderGraphPreview, renderSettings } from "./menus";
-import { App, Editor, Modal } from "obsidian";
-import { Settings } from "types/plot";
+import { Editor, Modal } from "obsidian";
+import { PlotSettings } from "types/plot";
 
 export class PlotModal extends Modal {
 	editor: Editor;
-	settings: Settings;
+	settings: PlotSettings;
+	plugin: MathematicaPlot;
 
-	constructor(app: App, editor: Editor, settings: Settings) {
-		super(app);
+	constructor(
+		plugin: MathematicaPlot,
+		editor: Editor,
+		settings: PlotSettings
+	) {
+		super(plugin.app);
+		this.plugin = plugin;
 		this.editor = editor;
 		this.settings = settings;
 	}
