@@ -1,5 +1,5 @@
 import { Setting } from "obsidian";
-import { Graph3D, Options3D, PlotSettings } from "types/plot";
+import { Graph3D, Interval, Options3D, PlotSettings } from "types/plot";
 
 export type OptionsFields = {
 	[key in keyof Omit<Options3D, "others">]?: string;
@@ -34,3 +34,24 @@ export const renderOptions =
 				})
 			);
 	};
+
+export const renderIntervalForm = (
+	el: HTMLElement,
+	variable: string,
+	interval: Interval
+) => {
+	new Setting(el.createDiv())
+		.setName(`${variable} min`)
+		.addText((component) =>
+			component.setValue(interval.min).onChange((value) => {
+				interval.min = value;
+			})
+		);
+	new Setting(el.createDiv())
+		.setName(`${variable} max`)
+		.addText((component) =>
+			component.setValue(interval.max).onChange((value) => {
+				interval.max = value;
+			})
+		);
+};

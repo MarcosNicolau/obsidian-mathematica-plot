@@ -2,7 +2,7 @@ import { renders2D } from "modal/menus/graph/settings2d";
 import { renders3D } from "modal/menus/graph/settings3d";
 import { PlotModal } from "modal/plotModal";
 import { DropdownComponent, Setting } from "obsidian";
-import { Graph2DTypes, Graph3DTypes } from "types/plot";
+import { GraphTypes } from "types/plot";
 
 type RenderType = {
 	"2D": typeof renders2D;
@@ -22,6 +22,7 @@ export const render = (
 	const {
 		defaultGraph,
 		renderParametricPlotSettings,
+		renderRegionPlotSettings,
 		renderPlotSettings,
 		renderOptions,
 	} = renderType[type];
@@ -93,12 +94,13 @@ export const render = (
 		new Setting(selectedGraphEl.createDiv())
 			.setName("Type")
 			.addDropdown((component) => {
-				component.addOptions({
+				component.addOptions(<{ [key in GraphTypes]: string }>{
 					plot: "Plot",
 					parametricPlot: "Parametric Plot",
+					regionPlot: "Region Plot",
 				});
 				component.setValue(graph.type);
-				component.onChange((value: Graph2DTypes | Graph3DTypes) => {
+				component.onChange((value: GraphTypes) => {
 					graph.type = value;
 					renderSelectedGraphSettings();
 				});
@@ -110,6 +112,8 @@ export const render = (
 		if (graph.type === "plot") {
 			renderPlotSettings(selectedGraphEl, graph);
 		}
+		if (graph.type === "regionPlot")
+			renderRegionPlotSettings(selectedGraphEl, graph);
 
 		renderOptions(selectedGraphEl, modal.settings, graph.options);
 	};

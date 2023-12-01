@@ -25,6 +25,23 @@ export type Options3D = Options2D & {
 	boundaryStyle: string;
 };
 
+export type RegionPlot2D = {
+	expression: string;
+	domain: {
+		x: Interval;
+		y: Interval;
+	};
+};
+
+export type RegionPlot3D = {
+	expression: string;
+	domain: {
+		x: Interval;
+		y: Interval;
+		z: Interval;
+	};
+};
+
 export type ParametricPlot2D = {
 	components: string[];
 	domain: {
@@ -59,11 +76,10 @@ export type GeneralSettings = {
 	plotLabel?: string;
 };
 
-export type Graph2DTypes = "plot" | "parametricPlot";
-export type Graph3DTypes = Graph2DTypes;
+export type GraphTypes = "plot" | "parametricPlot" | "regionPlot";
 
 export type BuildGraph<
-	Type extends Graph2DTypes | Graph3DTypes,
+	Type extends GraphTypes,
 	PlotType,
 	Options = Options2D
 > = PlotType & {
@@ -74,11 +90,13 @@ export type BuildGraph<
 
 export type Graph2D =
 	| BuildGraph<"plot", Plot2D>
-	| BuildGraph<"parametricPlot", ParametricPlot2D>;
+	| BuildGraph<"parametricPlot", ParametricPlot2D>
+	| BuildGraph<"regionPlot", RegionPlot2D>;
 
 export type Graph3D =
 	| BuildGraph<"plot", Plot3D, Options3D>
-	| BuildGraph<"parametricPlot", ParametricPlot3D, Options3D>;
+	| BuildGraph<"parametricPlot", ParametricPlot3D, Options3D>
+	| BuildGraph<"regionPlot", RegionPlot3D, Options3D>;
 
 // 1. Maybe it would be better  to have two separate fields that divide each type of graph, so the types would be easier  to handle
 // 2. But we take this approach to make it more readable to the user when it gets converted to yaml.

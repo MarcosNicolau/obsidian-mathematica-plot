@@ -1,17 +1,27 @@
 import { Setting } from "obsidian";
-import { Graph3D, ParametricPlot3D, Plot3D } from "types/plot";
-import { OptionsFields, renderOptions } from "modal/menus/graph/helpers";
+import { Graph3D, ParametricPlot3D, Plot3D, RegionPlot3D } from "types/plot";
+import {
+	OptionsFields,
+	renderIntervalForm,
+	renderOptions,
+} from "modal/menus/graph/helpers";
 
 export const defaultGraph = (
 	id: string
-): Graph3D & Plot3D & ParametricPlot3D => ({
+): Graph3D & Plot3D & ParametricPlot3D & RegionPlot3D => ({
 	id,
 	type: "plot",
 	expression: "",
 	plotRange: { x: { min: "", max: "" }, y: { min: "", max: "" } },
 	options: {},
 	components: [],
-	domain: { u: { min: "", max: "" }, v: { min: "", max: "" } },
+	domain: {
+		u: { min: "", max: "" },
+		v: { min: "", max: "" },
+		x: { min: "", max: "" },
+		y: { min: "", max: "" },
+		z: { min: "", max: "" },
+	},
 });
 
 export const renderPlotSettings = (el: HTMLElement, graph: Plot3D) => {
@@ -23,26 +33,9 @@ export const renderPlotSettings = (el: HTMLElement, graph: Plot3D) => {
 				graph.expression = value;
 			})
 		);
-	new Setting(el.createDiv()).setName("x min").addText((component) =>
-		component.setValue(graph.plotRange.x.min).onChange((value) => {
-			graph.plotRange.x.min = value;
-		})
-	);
-	new Setting(el.createDiv()).setName("x max").addText((component) =>
-		component.setValue(graph.plotRange.x.max).onChange((value) => {
-			graph.plotRange.x.max = value;
-		})
-	);
-	new Setting(el.createDiv()).setName("y min").addText((component) =>
-		component.setValue(graph.plotRange.y.min).onChange((value) => {
-			graph.plotRange.y.min = value;
-		})
-	);
-	new Setting(el.createDiv()).setName("y max").addText((component) =>
-		component.setValue(graph.plotRange.y.max).onChange((value) => {
-			graph.plotRange.y.max = value;
-		})
-	);
+
+	renderIntervalForm(el, "x", graph.plotRange.x);
+	renderIntervalForm(el, "y", graph.plotRange.y);
 };
 
 export const renderParametricPlotSettings = (
@@ -64,26 +57,25 @@ export const renderParametricPlotSettings = (
 			graph.components[2] = value;
 		})
 	);
-	new Setting(el.createDiv()).setName("u min").addText((component) =>
-		component.setValue(graph.domain.u.min).onChange((value) => {
-			graph.domain.u.min = value;
-		})
-	);
-	new Setting(el.createDiv()).setName("u max").addText((component) =>
-		component.setValue(graph.domain.u.max).onChange((value) => {
-			graph.domain.u.max = value;
-		})
-	);
-	new Setting(el.createDiv()).setName("v min").addText((component) =>
-		component.setValue(graph.domain.v.min).onChange((value) => {
-			graph.domain.v.min = value;
-		})
-	);
-	new Setting(el.createDiv()).setName("v max").addText((component) =>
-		component.setValue(graph.domain.v.max).onChange((value) => {
-			graph.domain.v.max = value;
-		})
-	);
+	renderIntervalForm(el, "u", graph.domain.u);
+	renderIntervalForm(el, "v", graph.domain.v);
+};
+
+export const renderRegionPlotSettings = (
+	el: HTMLElement,
+	graph: RegionPlot3D
+) => {
+	new Setting(el.createDiv())
+		.setName("expression (x,y,z)")
+		.setDesc("You can also provide a list of expressions {e1, e2, ...}")
+		.addTextArea((component) =>
+			component.setValue(graph.expression).onChange((value) => {
+				graph.expression = value;
+			})
+		);
+	renderIntervalForm(el, "x", graph.domain.x);
+	renderIntervalForm(el, "y", graph.domain.y);
+	renderIntervalForm(el, "z", graph.domain.z);
 };
 
 const optsFields: OptionsFields = {
@@ -97,7 +89,8 @@ const optsFields: OptionsFields = {
 
 export const renders3D = {
 	defaultGraph,
-	renderParametricPlotSettings,
-	renderOptions: renderOptions(optsFields),
 	renderPlotSettings,
+	renderParametricPlotSettings,
+	renderRegionPlotSettings,
+	renderOptions: renderOptions(optsFields),
 };

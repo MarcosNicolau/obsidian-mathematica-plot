@@ -1,14 +1,15 @@
 import {
 	ParametricPlot2D,
 	GeneralSettings,
-	Graph2DTypes,
-	Graph3DTypes,
 	Options2D,
 	Options3D,
 	Plot2D,
 	Plot3D,
 	PlotSettings,
 	ParametricPlot3D,
+	GraphTypes,
+	RegionPlot2D,
+	RegionPlot3D,
 } from "../types/plot";
 
 export const parseTrueFalse = (value: any) => (value ? "True" : "False");
@@ -48,25 +49,37 @@ const parseOptions = (
 	else return `,${opts}`;
 };
 
-const mathematicaPlotParser2D = {
-	parametricPlot: (curve: ParametricPlot2D, opts: Options2D) => {
+type Parsers = {
+	[key in GraphTypes]: Function;
+};
+
+const mathematicaPlotParser2D: Parsers = {
+	parametricPlot: (parametricPlot: ParametricPlot2D, opts: Options2D) => {
 		const {
 			components,
 			domain: { u },
-		} = curve;
+		} = parametricPlot;
 		const options = parseOptions(opts);
 		return `ParametricPlot[{${components.join()}}, {u, ${u.min}, ${
 			u.max
 		}} ${options}]`;
 	},
-	plot: (scalarField: Plot2D, opts: Options2D) => {
-		const { expression, plotRange } = scalarField;
+	plot: (plot: Plot2D, opts: Options2D) => {
+		const { expression, plotRange } = plot;
 		const options = parseOptions(opts);
 		return `Plot[${expression}, {x, ${plotRange.x.min}, ${plotRange.x.max}} ${options}]`;
 	},
+	regionPlot: (regionPlot: RegionPlot2D, opts: Options2D) => {
+		const {
+			expression,
+			domain: { x, y },
+		} = regionPlot;
+		const options = parseOptions(opts);
+		return `RegionPlot[${expression}, {x, ${x.min}, ${x.max}}, {y, ${y.min}, ${y.max}} ${options}]`;
+	},
 };
 
-const mathematicaPlotParser3D = {
+const mathematicaPlotParser3D: Parsers = {
 	parametricPlot: (surface: ParametricPlot3D, opts: Options3D) => {
 		const {
 			components,
@@ -85,6 +98,14 @@ const mathematicaPlotParser3D = {
 		const options = parseOptions(opts);
 		return `Plot3D[${expression}, {x, ${plotRange.x.min}, ${plotRange.x.max}}, {y, ${plotRange.y.min}, ${plotRange.y.max}} ${options}]`;
 	},
+	regionPlot: (regionPlot: RegionPlot3D, opts: Options3D) => {
+		const {
+			expression,
+			domain: { x, y, z },
+		} = regionPlot;
+		const options = parseOptions(opts);
+		return `RegionPlot3D[${expression}, {x, ${x.min}, ${x.max}}, {y, ${y.min}, ${y.max}}, {z, ${z.min}, ${z.max}} ${options}]`;
+	},
 };
 
 const rasterizeParser = (code: string, settings: PlotSettings) => {
@@ -97,29 +118,15 @@ const rasterizeParser = (code: string, settings: PlotSettings) => {
 };
 
 export const mathematicaParser2D = (settings: PlotSettings) => {
-	const parse2D = (type: Graph2DTypes) =>
-		settings.graphs
-			.filter((graph) => graph.type === type)
-			.map((graph) =>
-				mathematicaPlotParser2D[type](graph, graph.options)
-			) || [];
-
-	return rasterizeParser(
-		[...parse2D("plot"), ...parse2D("parametricPlot")].join(),
-		settings
+	const parsedGraphs = settings.graphs.map((graph) =>
+		mathematicaPlotParser2D[graph.type](graph, graph.options)
 	);
+	return rasterizeParser(parsedGraphs.join(), settings);
 };
 
 export const mathematicaParser3D = (settings: PlotSettings) => {
-	const parse3D = (type: Graph3DTypes) =>
-		settings.graphs
-			.filter((graph) => graph.type === type)
-			.map((graph) =>
-				mathematicaPlotParser3D[type](graph, graph.options)
-			) || [];
-
-	return rasterizeParser(
-		[...parse3D("plot"), ...parse3D("parametricPlot")].join(),
-		settings
+	const parsedGraphs = settings.graphs.map((graph) =>
+		mathematicaPlotParser3D[graph.type](graph, graph.options)
 	);
+	return rasterizeParser(parsedGraphs.join(), settings);
 };
