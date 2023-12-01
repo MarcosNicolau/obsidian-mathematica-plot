@@ -1,7 +1,7 @@
 import { promisify } from "util";
 import { exec } from "child_process";
 import { mathematicaParser2D, mathematicaParser3D } from "./parsers";
-import { Settings } from "types/plot";
+import { PlotSettings } from "types/plot";
 import { parseYaml } from "obsidian";
 
 export const getBase64Plot = async (
@@ -23,7 +23,7 @@ export const parseCodeBlock = (
 	code: string
 ): { error: string; code: string } => {
 	try {
-		const settings: Settings = parseYaml(code);
+		const settings: PlotSettings = parseYaml(code);
 		let parsedCode = "";
 		if (settings.raster.type == "2D")
 			parsedCode = mathematicaParser2D(settings);

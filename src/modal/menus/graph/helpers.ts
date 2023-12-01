@@ -1,5 +1,5 @@
 import { Setting } from "obsidian";
-import { Graph3D, Options3D, Settings } from "types/plot";
+import { Graph3D, Options3D, PlotSettings } from "types/plot";
 
 export type OptionsFields = {
 	[key in keyof Omit<Options3D, "others">]?: string;
@@ -7,7 +7,7 @@ export type OptionsFields = {
 
 export const renderOptions =
 	(optionsFields: OptionsFields) =>
-	(el: HTMLElement, settings: Settings, options: Graph3D["options"]) => {
+	(el: HTMLElement, settings: PlotSettings, options: Graph3D["options"]) => {
 		el.createEl("h5", {
 			text: `Plot Options ${settings.raster.type}`,
 		});

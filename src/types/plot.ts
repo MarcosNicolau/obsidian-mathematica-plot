@@ -96,7 +96,7 @@ export type RasterizeSettings = {
 	};
 };
 
-export type Settings = {
+export type PlotSettings = {
 	raster: RasterizeSettings;
 	general: GeneralSettings;
 	graphs: Graphs;

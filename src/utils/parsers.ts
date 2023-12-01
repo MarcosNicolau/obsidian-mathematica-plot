@@ -7,7 +7,7 @@ import {
 	Options3D,
 	Plot2D,
 	Plot3D,
-	Settings,
+	PlotSettings,
 	ParametricPlot3D,
 } from "../types/plot";
 
@@ -87,7 +87,7 @@ const mathematicaPlotParser3D = {
 	},
 };
 
-const rasterizeParser = (code: string, settings: Settings) => {
+const rasterizeParser = (code: string, settings: PlotSettings) => {
 	const generalOptions = parseOptions(settings.general);
 	return `Rasterize[Show[${code} ${generalOptions}], ImageSize -> {${
 		settings.raster?.dimensions?.width || 250
@@ -96,7 +96,7 @@ const rasterizeParser = (code: string, settings: Settings) => {
 	}, AspectRatio -> Automatic]`;
 };
 
-export const mathematicaParser2D = (settings: Settings) => {
+export const mathematicaParser2D = (settings: PlotSettings) => {
 	const parse2D = (type: Graph2DTypes) =>
 		settings.graphs
 			.filter((graph) => graph.type === type)
@@ -110,7 +110,7 @@ export const mathematicaParser2D = (settings: Settings) => {
 	);
 };
 
-export const mathematicaParser3D = (settings: Settings) => {
+export const mathematicaParser3D = (settings: PlotSettings) => {
 	const parse3D = (type: Graph3DTypes) =>
 		settings.graphs
 			.filter((graph) => graph.type === type)
