@@ -27,10 +27,8 @@ const renderByDim: { [key in Dimensions]: RenderSettings } = {
 export const render = (el: HTMLElement, modal: PlotModal, dim: Dimensions) => {
 	const { renderSettings, renderOptions } = renderByDim[dim];
 
-	modal.settings.graphs = [];
-	modal.settings.graphs[0] = defaultGraph("graph_0", "plot");
-
 	const graphs = modal.settings.graphs;
+	if (!graphs.length) graphs[0] = defaultGraph("graph_0", "plot");
 	let count = 0;
 	let dropdown: DropdownComponent;
 

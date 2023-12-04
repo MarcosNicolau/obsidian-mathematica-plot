@@ -8,6 +8,7 @@ import {
 	GraphTypes,
 	RegionPlot,
 	ContourPlot,
+	VectorPlot,
 } from "../types/plot";
 
 export const parseTrueFalse = (value: any) => (value ? "True" : "False");
@@ -54,9 +55,10 @@ const mathematicaPlotParser2D: Parsers = {
 			domain: { u },
 		} = parametricPlot;
 		const options = parseOptions(opts);
-		return `ParametricPlot[{${components.join()}}, {u, ${u.min}, ${
-			u.max
-		}} ${options}]`;
+		return `ParametricPlot[{${[
+			components[0],
+			components[1],
+		].join()}}, {u, ${u.min}, ${u.max}} ${options}]`;
 	},
 	plot: (plot: Plot, opts: Options2D) => {
 		const { expression, plotRange } = plot;
@@ -78,6 +80,14 @@ const mathematicaPlotParser2D: Parsers = {
 		} = contourPlot;
 		const options = parseOptions(opts);
 		return `ContourPlot[${expression}, {x, ${x.min}, ${x.max}}, {y, ${y.min}, ${y.max}} ${options}]`;
+	},
+	vectorPlot: (vectorPlot: VectorPlot, opts: Options2D) => {
+		const { components, domain } = vectorPlot;
+		const { x, y } = domain;
+		const options = parseOptions(opts);
+		return `VectorPlot[{${[components[0], components[1]].join()}}, {x, ${
+			x.min
+		}, ${x.max}}, {y, ${y.min}, ${y.max}} ${options}]`;
 	},
 };
 
@@ -115,6 +125,14 @@ const mathematicaPlotParser3D: Parsers = {
 		} = contourPlot;
 		const options = parseOptions(opts);
 		return `ContourPlot3D[${expression}, {x, ${x.min}, ${x.max}}, {y, ${y.min}, ${y.max}}, {z, ${z.min}, ${z.max}} ${options}]`;
+	},
+	vectorPlot: (vectorPlot: VectorPlot, opts: Options2D) => {
+		const { components, domain } = vectorPlot;
+		const { x, y, z } = domain;
+		const options = parseOptions(opts);
+		return `VectorPlot3D[{${components.join()}}, {x, ${x.min}, ${
+			x.max
+		}}, {y, ${y.min}, ${y.max}}, {z, ${z.min}, ${z.max}}${options}]`;
 	},
 };
 

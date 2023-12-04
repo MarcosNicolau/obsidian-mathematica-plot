@@ -66,13 +66,15 @@ export type GraphTypes =
 	| "plot"
 	| "parametricPlot"
 	| "regionPlot"
-	| "contourPlot";
+	| "contourPlot"
+	| "vectorPlot";
 
 export type PlotType = {
 	plot: Plot;
 	parametricPlot: ParametricPlot;
 	regionPlot: RegionPlot;
 	contourPlot: ContourPlot;
+	vectorPlot: VectorPlot;
 };
 
 export type Graph = {

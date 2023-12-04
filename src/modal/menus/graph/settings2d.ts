@@ -5,7 +5,13 @@ import {
 	renderOptions,
 } from "modal/menus/graph/helpers";
 import { Setting } from "obsidian";
-import { ContourPlot, ParametricPlot, Plot, RegionPlot } from "types/plot";
+import {
+	ContourPlot,
+	ParametricPlot,
+	Plot,
+	RegionPlot,
+	VectorPlot,
+} from "types/plot";
 
 export const renderPlotSettings = (el: HTMLElement, graph: Plot) => {
 	new Setting(el.createDiv())
@@ -69,6 +75,24 @@ export const renderContourPlotSettings = (
 	renderIntervalForm(el, "y", graph.domain.y);
 };
 
+export const renderVectorPlotSettings = (
+	el: HTMLElement,
+	graph: VectorPlot
+) => {
+	new Setting(el.createDiv()).setName("vx(x,y) = ").addTextArea((component) =>
+		component.setValue(graph.components[0]).onChange((value) => {
+			graph.components[0] = value;
+		})
+	);
+	new Setting(el.createDiv()).setName("vy(x,y) = ").addTextArea((component) =>
+		component.setValue(graph.components[1]).onChange((value) => {
+			graph.components[1] = value;
+		})
+	);
+	renderIntervalForm(el, "x", graph.domain.x);
+	renderIntervalForm(el, "y", graph.domain.y);
+};
+
 const optsFields: OptionsFields = {
 	plotLabels: "Plot Labels",
 	plotLegends: "Plot Legends",
@@ -83,6 +107,7 @@ export const renders2D: RenderSettings = {
 		parametricPlot: renderParametricPlotSettings,
 		regionPlot: renderRegionPlotSettings,
 		contourPlot: renderContourPlotSettings,
+		vectorPlot: renderVectorPlotSettings,
 	},
 	renderOptions: renderOptions(optsFields),
 };
