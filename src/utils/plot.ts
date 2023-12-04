@@ -3,13 +3,19 @@ import { exec } from "child_process";
 import { mathematicaParser2D, mathematicaParser3D } from "./parsers";
 import { PlotSettings } from "types/plot";
 import { parseYaml } from "obsidian";
+import { MathematicaPlotSettings } from "types/plugin";
+
+export type GetBase64PlotSettings = Pick<
+	MathematicaPlotSettings,
+	"useCloud" | "wolframScriptPath"
+>;
 
 export const getBase64Plot = async (
 	plot: string,
-	useCloud: boolean
+	{ useCloud, wolframScriptPath }: GetBase64PlotSettings
 ): Promise<{ error: string; base64: string }> => {
 	const { stdout, stderr } = await promisify(exec)(
-		`wolframscript ${
+		`${wolframScriptPath ? wolframScriptPath : "wolframscript"} ${
 			useCloud ? "--cloud" : ""
 		}  --code 'ExportString[${plot}, {"Base64", "PNG"}]'`
 	);
@@ -25,9 +31,9 @@ export const parseCodeBlock = (
 	try {
 		const settings: PlotSettings = parseYaml(code);
 		let parsedCode = "";
-		if (settings.raster.type == "2D")
+		if (settings.raster.dim == "2D")
 			parsedCode = mathematicaParser2D(settings);
-		if (settings.raster.type == "3D")
+		if (settings.raster.dim == "3D")
 			parsedCode = mathematicaParser3D(settings);
 		return { code: parsedCode.replace(/\s/g, ""), error: "" };
 	} catch (err) {

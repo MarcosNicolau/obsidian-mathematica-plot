@@ -15,8 +15,8 @@ export const renderRasterSettings = (
 			"2D": "2D",
 			"3D": "3D",
 		});
-		component.onChange((value: RasterizeSettings["type"]) => {
-			settings.raster.type = value;
+		component.onChange((value: RasterizeSettings["dim"]) => {
+			settings.raster.dim = value;
 			renderGraphSettings(graphSettingsEl, modal);
 		});
 	});
@@ -30,17 +30,15 @@ export const renderRasterSettings = (
 	new Setting(el.createDiv())
 		.addText((text) =>
 			text
-				.setValue(settings.raster.dimensions.height)
-				.onChange(
-					(value) => (settings.raster.dimensions.height = value)
-				)
+				.setValue(settings.raster.size.height)
+				.onChange((value) => (settings.raster.size.height = value))
 		)
 		.setName("Height");
 	new Setting(el.createDiv())
 		.addText((text) =>
 			text
-				.setValue(settings.raster.dimensions.width)
-				.onChange((value) => (settings.raster.dimensions.width = value))
+				.setValue(settings.raster.size.width)
+				.onChange((value) => (settings.raster.size.width = value))
 		)
 		.setName("Width");
 };

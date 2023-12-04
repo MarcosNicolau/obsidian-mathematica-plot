@@ -27,5 +27,18 @@ export class MathematicaPlotSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+		new Setting(containerEl)
+			.setName("WolframScript path")
+			.setDesc(
+				"The installation path of WolframScript. If you WolframScript is globally available on your system you can leave it blank."
+			)
+			.addText((component) =>
+				component
+					.setValue(this.plugin.settings.wolframScriptPath)
+					.onChange(async (value) => {
+						this.plugin.settings.wolframScriptPath = value;
+						await this.plugin.saveSettings();
+					})
+			);
 	}
 }

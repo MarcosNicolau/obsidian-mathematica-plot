@@ -1,30 +1,13 @@
 import { Setting } from "obsidian";
-import { Graph3D, ParametricPlot3D, Plot3D, RegionPlot3D } from "types/plot";
+import { ParametricPlot, Plot, RegionPlot } from "types/plot";
 import {
 	OptionsFields,
 	renderIntervalForm,
 	renderOptions,
 } from "modal/menus/graph/helpers";
+import { RenderSettings } from "modal/menus/graph";
 
-export const defaultGraph = (
-	id: string
-): Graph3D & Plot3D & ParametricPlot3D & RegionPlot3D => ({
-	id,
-	type: "plot",
-	expression: "",
-	plotRange: { x: { min: "", max: "" }, y: { min: "", max: "" } },
-	options: {},
-	components: [],
-	domain: {
-		u: { min: "", max: "" },
-		v: { min: "", max: "" },
-		x: { min: "", max: "" },
-		y: { min: "", max: "" },
-		z: { min: "", max: "" },
-	},
-});
-
-export const renderPlotSettings = (el: HTMLElement, graph: Plot3D) => {
+export const renderPlotSettings = (el: HTMLElement, graph: Plot) => {
 	new Setting(el.createDiv())
 		.setName("f(x, y) = ")
 		.setDesc("You can also provide a list of functions {f1, f2, ...}")
@@ -40,7 +23,7 @@ export const renderPlotSettings = (el: HTMLElement, graph: Plot3D) => {
 
 export const renderParametricPlotSettings = (
 	el: HTMLElement,
-	graph: ParametricPlot3D
+	graph: ParametricPlot
 ) => {
 	new Setting(el.createDiv()).setName("g1(u, v) =").addTextArea((component) =>
 		component.setValue(graph.components[0]).onChange((value) => {
@@ -63,7 +46,7 @@ export const renderParametricPlotSettings = (
 
 export const renderRegionPlotSettings = (
 	el: HTMLElement,
-	graph: RegionPlot3D
+	graph: RegionPlot
 ) => {
 	new Setting(el.createDiv())
 		.setName("expression (x,y,z)")
@@ -87,10 +70,11 @@ const optsFields: OptionsFields = {
 	boundaryStyle: "Boundary Style",
 };
 
-export const renders3D = {
-	defaultGraph,
-	renderPlotSettings,
-	renderParametricPlotSettings,
-	renderRegionPlotSettings,
+export const renders3D: RenderSettings = {
+	renderSettings: {
+		plot: renderPlotSettings,
+		parametricPlot: renderParametricPlotSettings,
+		regionPlot: renderRegionPlotSettings,
+	},
 	renderOptions: renderOptions(optsFields),
 };

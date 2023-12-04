@@ -1,5 +1,12 @@
 import { Setting } from "obsidian";
-import { Graph3D, Interval, Options3D, PlotSettings } from "types/plot";
+import {
+	Graph,
+	GraphTypes,
+	Interval,
+	Options3D,
+	PlotSettings,
+	PlotType,
+} from "types/plot";
 
 export type OptionsFields = {
 	[key in keyof Omit<Options3D, "others">]?: string;
@@ -7,9 +14,9 @@ export type OptionsFields = {
 
 export const renderOptions =
 	(optionsFields: OptionsFields) =>
-	(el: HTMLElement, settings: PlotSettings, options: Graph3D["options"]) => {
+	(el: HTMLElement, settings: PlotSettings, options: Graph["options"]) => {
 		el.createEl("h5", {
-			text: `Plot Options ${settings.raster.type}`,
+			text: `Plot Options ${settings.raster.dim}`,
 		});
 		Object.entries(optionsFields).forEach(
 			(entry: [keyof Options3D, string], index) =>
@@ -54,4 +61,36 @@ export const renderIntervalForm = (
 				interval.max = value;
 			})
 		);
+};
+
+export const defaultGraphType = (): PlotType => ({
+	plot: {
+		expression: "",
+		plotRange: { x: { min: "", max: "" }, y: { min: "", max: "" } },
+	},
+	parametricPlot: {
+		components: [],
+		domain: { u: { min: "", max: "" }, v: { min: "", max: "" } },
+	},
+	regionPlot: {
+		expression: "",
+		domain: {
+			x: { min: "", max: "" },
+			y: { min: "", max: "" },
+			z: { min: "", max: "" },
+		},
+	},
+});
+
+export const defaultGraph = (id: string, type: GraphTypes): Graph => ({
+	id,
+	type,
+	options: {},
+	...defaultGraphType(),
+});
+
+export const graphTypesOptions: { [key in GraphTypes]: string } = {
+	plot: "Plot",
+	parametricPlot: "Parametric Plot",
+	regionPlot: "Region Plot",
 };

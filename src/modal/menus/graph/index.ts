@@ -1,34 +1,34 @@
+import {
+	defaultGraph,
+	graphTypesOptions,
+	renderOptions,
+} from "modal/menus/graph/helpers";
 import { renders2D } from "modal/menus/graph/settings2d";
 import { renders3D } from "modal/menus/graph/settings3d";
 import { PlotModal } from "modal/plotModal";
 import { DropdownComponent, Setting } from "obsidian";
-import { GraphTypes } from "types/plot";
+import { Dimensions, GraphTypes, PlotType } from "types/plot";
 
-type RenderType = {
-	"2D": typeof renders2D;
-	"3D": typeof renders3D;
+export type RenderSettings = {
+	renderSettings: {
+		[key in GraphTypes]: (
+			el: HTMLElement,
+			graph: PlotType[GraphTypes]
+		) => void;
+	};
+	renderOptions: ReturnType<typeof renderOptions>;
 };
 
-const renderType: RenderType = {
+const renderByDim: { [key in Dimensions]: RenderSettings } = {
 	"2D": renders2D,
 	"3D": renders3D,
 };
 
-export const render = (
-	el: HTMLElement,
-	modal: PlotModal,
-	type: "2D" | "3D"
-) => {
-	const {
-		defaultGraph,
-		renderParametricPlotSettings,
-		renderRegionPlotSettings,
-		renderPlotSettings,
-		renderOptions,
-	} = renderType[type];
+export const render = (el: HTMLElement, modal: PlotModal, dim: Dimensions) => {
+	const { renderSettings, renderOptions } = renderByDim[dim];
 
 	modal.settings.graphs = [];
-	modal.settings.graphs[0] = defaultGraph("graph_0");
+	modal.settings.graphs[0] = defaultGraph("graph_0", "plot");
 
 	const graphs = modal.settings.graphs;
 	let count = 0;
@@ -46,7 +46,7 @@ export const render = (
 				.onChange((value) => {
 					if (value === "add") {
 						const name = `graph_${++count}`;
-						graphs.push(defaultGraph(name));
+						graphs.push(defaultGraph(name, "plot"));
 						component.addOption(name, name);
 						// Removing and re-adding the add field to keep it at the end
 						component.selectEl.remove(
@@ -94,11 +94,7 @@ export const render = (
 		new Setting(selectedGraphEl.createDiv())
 			.setName("Type")
 			.addDropdown((component) => {
-				component.addOptions(<{ [key in GraphTypes]: string }>{
-					plot: "Plot",
-					parametricPlot: "Parametric Plot",
-					regionPlot: "Region Plot",
-				});
+				component.addOptions(graphTypesOptions);
 				component.setValue(graph.type);
 				component.onChange((value: GraphTypes) => {
 					graph.type = value;
@@ -106,14 +102,7 @@ export const render = (
 				});
 			});
 
-		if (graph.type === "parametricPlot") {
-			renderParametricPlotSettings(selectedGraphEl, graph);
-		}
-		if (graph.type === "plot") {
-			renderPlotSettings(selectedGraphEl, graph);
-		}
-		if (graph.type === "regionPlot")
-			renderRegionPlotSettings(selectedGraphEl, graph);
+		renderSettings[graph.type](selectedGraphEl, graph[graph.type]);
 
 		renderOptions(selectedGraphEl, modal.settings, graph.options);
 	};
@@ -123,6 +112,6 @@ export const render = (
 
 export const renderGraphSettings = (el: HTMLElement, modal: PlotModal) => {
 	el.innerHTML = "";
-	el.createEl("h5", { text: `Plot ${modal.settings.raster.type}` });
-	render(el, modal, modal.settings.raster.type);
+	el.createEl("h5", { text: `Plot ${modal.settings.raster.dim}` });
+	render(el, modal, modal.settings.raster.dim);
 };
