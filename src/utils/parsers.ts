@@ -7,6 +7,7 @@ import {
 	ParametricPlot,
 	GraphTypes,
 	RegionPlot,
+	ContourPlot,
 } from "../types/plot";
 
 export const parseTrueFalse = (value: any) => (value ? "True" : "False");
@@ -70,6 +71,14 @@ const mathematicaPlotParser2D: Parsers = {
 		const options = parseOptions(opts);
 		return `RegionPlot[${expression}, {x, ${x.min}, ${x.max}}, {y, ${y.min}, ${y.max}} ${options}]`;
 	},
+	contourPlot: (contourPlot: RegionPlot, opts: Options2D) => {
+		const {
+			expression,
+			domain: { x, y },
+		} = contourPlot;
+		const options = parseOptions(opts);
+		return `ContourPlot[${expression}, {x, ${x.min}, ${x.max}}, {y, ${y.min}, ${y.max}} ${options}]`;
+	},
 };
 
 const mathematicaPlotParser3D: Parsers = {
@@ -99,11 +108,19 @@ const mathematicaPlotParser3D: Parsers = {
 		const options = parseOptions(opts);
 		return `RegionPlot3D[${expression}, {x, ${x.min}, ${x.max}}, {y, ${y.min}, ${y.max}}, {z, ${z.min}, ${z.max}} ${options}]`;
 	},
+	contourPlot: (contourPlot: ContourPlot, opts: Options3D) => {
+		const {
+			expression,
+			domain: { x, y, z },
+		} = contourPlot;
+		const options = parseOptions(opts);
+		return `ContourPlot3D[${expression}, {x, ${x.min}, ${x.max}}, {y, ${y.min}, ${y.max}}, {z, ${z.min}, ${z.max}} ${options}]`;
+	},
 };
 
 const rasterizeParser = (code: string, settings: PlotSettings) => {
 	const generalOptions = parseOptions(settings.general);
-	return `Rasterize[Show[${code} ${generalOptions}], ImageSize -> {${
+	return `Rasterize[GraphicsRow[{Show[${code} ${generalOptions}]}], ImageSize -> {${
 		settings.raster?.size?.width || 250
 	}, ${settings.raster?.size?.height || "Automatic"}}, Background -> ${
 		settings.raster.background

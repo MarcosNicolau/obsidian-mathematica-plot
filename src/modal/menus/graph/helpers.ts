@@ -80,6 +80,14 @@ export const defaultGraphType = (): PlotType => ({
 			z: { min: "", max: "" },
 		},
 	},
+	contourPlot: {
+		expression: "",
+		domain: {
+			x: { min: "", max: "" },
+			y: { min: "", max: "" },
+			z: { min: "", max: "" },
+		},
+	},
 });
 
 export const defaultGraph = (id: string, type: GraphTypes): Graph => ({
@@ -93,4 +101,5 @@ export const graphTypesOptions: { [key in GraphTypes]: string } = {
 	plot: "Plot",
 	parametricPlot: "Parametric Plot",
 	regionPlot: "Region Plot",
+	contourPlot: "Contour Plot",
 };

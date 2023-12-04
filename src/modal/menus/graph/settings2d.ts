@@ -5,7 +5,7 @@ import {
 	renderOptions,
 } from "modal/menus/graph/helpers";
 import { Setting } from "obsidian";
-import { ParametricPlot, Plot, RegionPlot } from "types/plot";
+import { ContourPlot, ParametricPlot, Plot, RegionPlot } from "types/plot";
 
 export const renderPlotSettings = (el: HTMLElement, graph: Plot) => {
 	new Setting(el.createDiv())
@@ -53,6 +53,22 @@ export const renderRegionPlotSettings = (
 	renderIntervalForm(el, "y", graph.domain.y);
 };
 
+export const renderContourPlotSettings = (
+	el: HTMLElement,
+	graph: ContourPlot
+) => {
+	new Setting(el.createDiv())
+		.setName("expression (x,y)")
+		.setDesc("You can also provide a list of expressions {e1, e2, ...}")
+		.addTextArea((component) =>
+			component.setValue(graph.expression).onChange((value) => {
+				graph.expression = value;
+			})
+		);
+	renderIntervalForm(el, "x", graph.domain.x);
+	renderIntervalForm(el, "y", graph.domain.y);
+};
+
 const optsFields: OptionsFields = {
 	plotLabels: "Plot Labels",
 	plotLegends: "Plot Legends",
@@ -66,6 +82,7 @@ export const renders2D: RenderSettings = {
 		plot: renderPlotSettings,
 		parametricPlot: renderParametricPlotSettings,
 		regionPlot: renderRegionPlotSettings,
+		contourPlot: renderContourPlotSettings,
 	},
 	renderOptions: renderOptions(optsFields),
 };

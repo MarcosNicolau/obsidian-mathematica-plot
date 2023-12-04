@@ -1,5 +1,5 @@
 import { Setting } from "obsidian";
-import { ParametricPlot, Plot, RegionPlot } from "types/plot";
+import { ContourPlot, ParametricPlot, Plot, RegionPlot } from "types/plot";
 import {
 	OptionsFields,
 	renderIntervalForm,
@@ -61,6 +61,23 @@ export const renderRegionPlotSettings = (
 	renderIntervalForm(el, "z", graph.domain.z);
 };
 
+export const renderContourPlotSettings = (
+	el: HTMLElement,
+	graph: ContourPlot
+) => {
+	new Setting(el.createDiv())
+		.setName("expression (x,y,z)")
+		.setDesc("You can also provide a list of expressions {e1, e2, ...}")
+		.addTextArea((component) =>
+			component.setValue(graph.expression).onChange((value) => {
+				graph.expression = value;
+			})
+		);
+	renderIntervalForm(el, "x", graph.domain.x);
+	renderIntervalForm(el, "y", graph.domain.y);
+	renderIntervalForm(el, "z", graph.domain.z);
+};
+
 const optsFields: OptionsFields = {
 	plotLabels: "Plot Labels",
 	plotLegends: "Plot Legends",
@@ -75,6 +92,7 @@ export const renders3D: RenderSettings = {
 		plot: renderPlotSettings,
 		parametricPlot: renderParametricPlotSettings,
 		regionPlot: renderRegionPlotSettings,
+		contourPlot: renderContourPlotSettings,
 	},
 	renderOptions: renderOptions(optsFields),
 };

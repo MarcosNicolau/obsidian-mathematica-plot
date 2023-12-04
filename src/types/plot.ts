@@ -22,6 +22,24 @@ export type Options3D = Options2D & {
 	boundaryStyle: string;
 };
 
+export type VectorPlot = {
+	components: string[];
+	domain: {
+		x: Interval;
+		y: Interval;
+		z: Interval;
+	};
+};
+
+export type ContourPlot = {
+	expression: string;
+	domain: {
+		x: Interval;
+		y: Interval;
+		z: Interval;
+	};
+};
+
 export type RegionPlot = {
 	expression: string;
 	domain: {
@@ -44,19 +62,25 @@ export type Plot = {
 	plotRange: PlotRange;
 };
 
-export type GraphTypes = "plot" | "parametricPlot" | "regionPlot";
+export type GraphTypes =
+	| "plot"
+	| "parametricPlot"
+	| "regionPlot"
+	| "contourPlot";
 
 export type PlotType = {
 	plot: Plot;
 	parametricPlot: ParametricPlot;
 	regionPlot: RegionPlot;
+	contourPlot: ContourPlot;
 };
 
 export type Graph = {
 	id: string;
 	type: GraphTypes;
 	options: Partial<Options3D>;
-} & PlotType;
+	//This is to ensure all the keys in GraphTypes are in PlotType
+} & { [key in GraphTypes]: PlotType[key] };
 
 export type Graphs = Graph[];
 
