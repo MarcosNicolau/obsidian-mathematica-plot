@@ -21,12 +21,18 @@ export const renderSubmitBtn = (el: HTMLElement, modal: PlotModal) => {
 			.onClick(async () => {
 				modal.close();
 				const line = modal.editor.getCursor().line;
-				modal.editor.setLine(
-					line,
-					`\`\`\`plot-mathematica \n${stringifyYaml(
-						cleanSettingStructure(modal.settings)
-					)}\`\`\``
-				);
+				if (modal.options.isEditing) {
+					modal.editor.replaceSelection(
+						stringifyYaml(cleanSettingStructure(modal.settings))
+					);
+				} else
+					modal.editor.setLine(
+						line,
+						`\`\`\`plot-mathematica \n${stringifyYaml(
+							cleanSettingStructure(modal.settings)
+						)}\`\`\``
+					);
+				modal.options.afterSubmit(el);
 			})
 	);
 };

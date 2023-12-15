@@ -21,6 +21,24 @@
 	gap: 16px;
 }
 
+.mathematica-plot {
+	position: relative;
+}
+
+.mathematica-plot-edit-btn {
+	padding-bottom: var(--size-2-2);
+	padding-right: var(--size-2-3);
+	position: absolute;
+	right: var(--size-2-2);
+	bottom: var(--size-2-2);
+	opacity: 0;
+}
+
+.mathematica-plot:hover .mathematica-plot-edit-btn {
+	transition: 0s;
+	opacity: 1;
+}
+
 @media only screen and (max-width: 1300px) {
 	.mathematica-plot-modal {
 		width: 75%;

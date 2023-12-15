@@ -10,7 +10,7 @@ export const renderRasterSettings = (
 ) => {
 	const settings = modal.settings;
 	el.createEl("h5", { text: "Raster settings" });
-	new Setting(el).setName("Type").addDropdown((component) => {
+	new Setting(el).setName("Dimensions").addDropdown((component) => {
 		component.addOptions({
 			"2D": "2D",
 			"3D": "3D",
@@ -19,6 +19,7 @@ export const renderRasterSettings = (
 			settings.raster.dim = value;
 			renderGraphSettings(graphSettingsEl, modal);
 		});
+		component.setValue(settings.raster.dim);
 	});
 	new Setting(el.createDiv())
 		.addText((text) =>

@@ -3,20 +3,32 @@ import { renderGraphPreview, renderSettings } from "./menus";
 import { Editor, Modal } from "obsidian";
 import { PlotSettings } from "types/plot";
 
+type Options = {
+	isEditing: boolean;
+	afterSubmit: (el: HTMLElement) => void;
+};
+
+const defaultSettings: Options = {
+	isEditing: false,
+	afterSubmit: () => null,
+};
 export class PlotModal extends Modal {
 	editor: Editor;
 	settings: PlotSettings;
 	plugin: MathematicaPlot;
+	options: Options;
 
 	constructor(
 		plugin: MathematicaPlot,
 		editor: Editor,
-		settings: PlotSettings
+		settings: PlotSettings,
+		options: Partial<Options>
 	) {
 		super(plugin.app);
 		this.plugin = plugin;
 		this.editor = editor;
 		this.settings = settings;
+		this.options = { ...defaultSettings, ...options };
 	}
 
 	onOpen(): void {

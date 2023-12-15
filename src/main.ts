@@ -1,9 +1,16 @@
-import { Plugin, Platform } from "obsidian";
+import {
+	Plugin,
+	Platform,
+	ExtraButtonComponent,
+	parseYaml,
+	MarkdownView,
+} from "obsidian";
 import { PlotModal } from "modal/plotModal";
 import { PlotSettings } from "types/plot";
 import { MathematicaPlotSettingsTab } from "settingsTab";
 import { MathematicaPlotSettings } from "types/plugin";
 import { renderGraph } from "graphRender";
+import { isReadingView } from "utils/editor";
 
 const DEFAULT_SETTINGS: MathematicaPlotSettings = {
 	useCloud: false,
@@ -38,15 +45,45 @@ export default class MathematicaPlot extends Plugin {
 			id: "plot-graph",
 			name: "Plot Graph",
 			editorCallback: (editor) => {
-				new PlotModal(this, editor, defaultPlotSettings).open();
+				new PlotModal(this, editor, defaultPlotSettings, {}).open();
 			},
 		});
 		this.registerMarkdownCodeBlockProcessor(
 			"plot-mathematica",
-			async (source, el) =>
-				renderGraph(el, source, {
+			async (source, el) => {
+				const plotEl = el.createDiv({ cls: "mathematica-plot" });
+				await renderGraph(plotEl, source, {
 					...this.settings,
-				})
+				});
+				const view =
+					this.app.workspace.getActiveViewOfType(MarkdownView);
+				if (!view || isReadingView(view)) return;
+				const cursorPos = view.editor.getCursor();
+
+				const button = new ExtraButtonComponent(plotEl)
+					.setIcon("settings-2")
+					.setTooltip("Edit plot settings")
+					.onClick(() => {
+						// This selects all the content inside the codeblock
+						el.parentElement
+							?.querySelector<HTMLElement>(".edit-block-button")
+							?.click();
+
+						if (view) {
+							new PlotModal(
+								this,
+								view.editor,
+								parseYaml(source),
+								{
+									isEditing: true,
+									afterSubmit: () =>
+										view.editor.setCursor(cursorPos),
+								}
+							).open();
+						}
+					});
+				button.extraSettingsEl.addClass("mathematica-plot-edit-btn");
+			}
 		);
 		this.addSettingTab(new MathematicaPlotSettingsTab(this.app, this));
 	}
