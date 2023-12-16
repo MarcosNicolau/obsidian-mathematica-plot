@@ -5,10 +5,17 @@ import { PlotSettings } from "types/plot";
 import { parseYaml } from "obsidian";
 import { MathematicaPlotSettings } from "types/plugin";
 
-const isValidBase64 = (string: string) =>
-	/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$/.test(
-		string
-	);
+const isValidBase64 = (str: string) => {
+	try {
+		// Attempt to decode the string
+		window.atob(str);
+		// If decoding is successful, the input is a valid Base64 string
+		return true;
+	} catch (e) {
+		// If an exception is caught, the input is not a valid Base64 string
+		return false;
+	}
+};
 
 export type GetBase64PlotSettings = Pick<
 	MathematicaPlotSettings,
