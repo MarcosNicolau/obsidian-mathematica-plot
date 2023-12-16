@@ -12,9 +12,10 @@ import { MathematicaPlotSettingsTab } from "settingsTab";
 import { MathematicaPlotSettings } from "types/plugin";
 import { renderGraph } from "graphRender";
 import { isReadingView } from "utils/editor";
+import { platform } from "os";
 
 const DEFAULT_SETTINGS: MathematicaPlotSettings = {
-	useCloud: false,
+	useCloud: true,
 	wolframScriptPath: "",
 };
 
@@ -92,6 +93,10 @@ export default class MathematicaPlot extends Plugin {
 	onunload() {}
 
 	async loadSettings() {
+		// We only provide a default path for win, since the other OSes can be called with program name, provided that it is globally installed OFC.
+		if (platform() === "win32")
+			DEFAULT_SETTINGS.wolframScriptPath =
+				"C:\\Program Files\\Wolfram Research\\WolframScript\\wolframscript.exe";
 		this.settings = Object.assign(
 			{},
 			DEFAULT_SETTINGS,

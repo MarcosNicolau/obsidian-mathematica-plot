@@ -27,9 +27,11 @@ export const getBase64Plot = async (
 	{ useCloud, wolframScriptPath }: GetBase64PlotSettings
 ): Promise<{ error: string; base64: string }> => {
 	const { stdout, stderr } = await promisify(exec)(
-		`${wolframScriptPath ? wolframScriptPath : "wolframscript"} ${
+		`${
+			wolframScriptPath ? '"' + wolframScriptPath + '"' : "wolframscript"
+		} ${
 			useCloud ? "--cloud" : ""
-		}  --code 'ExportString[${plot}, {"Base64", "PNG"}]'`
+		}  --code "ExportString[${plot}, {\\"Base64\\", \\"PNG\\"}]"`
 	);
 	if (stderr) return { error: stderr, base64: "" };
 	// If it is not a valid image, it means there was a mistake in the wolfram syntax
