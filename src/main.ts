@@ -1,3 +1,4 @@
+import { defaultGraphType } from "./modal/menus/graph/helpers";
 import {
 	Plugin,
 	Platform,
@@ -70,16 +71,19 @@ export default class MathematicaPlot extends Plugin {
 							?.click();
 
 						if (view) {
-							new PlotModal(
-								this,
-								view.editor,
-								parseYaml(source),
-								{
-									isEditing: true,
-									afterSubmit: () =>
-										view.editor.setCursor(cursorPos),
-								}
-							).open();
+							const settings: PlotSettings = parseYaml(source);
+							// We need to add the default fields to the graphs
+							settings.graphs = settings.graphs.map((graph) => ({
+								...defaultGraphType(),
+								...graph,
+							}));
+							new PlotModal(this, view.editor, settings, {
+								isEditing: true,
+								afterSubmit: () =>
+									//Set the cursor back to the selection of the codeblock
+									view.editor.setCursor(cursorPos),
+								onClose: () => view.editor.setCursor(cursorPos),
+							}).open();
 						}
 					});
 				button.extraSettingsEl.addClass("mathematica-plot-edit-btn");

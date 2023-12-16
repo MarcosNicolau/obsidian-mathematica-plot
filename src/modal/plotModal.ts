@@ -6,11 +6,13 @@ import { PlotSettings } from "types/plot";
 type Options = {
 	isEditing: boolean;
 	afterSubmit: (el: HTMLElement) => void;
+	onClose: () => void;
 };
 
 const defaultSettings: Options = {
 	isEditing: false,
 	afterSubmit: () => null,
+	onClose: () => null,
 };
 export class PlotModal extends Modal {
 	editor: Editor;
@@ -46,5 +48,7 @@ export class PlotModal extends Modal {
 		renderGraphPreview(preview, this);
 	}
 
-	onClose(): void {}
+	onClose(): void {
+		this.options.onClose();
+	}
 }
