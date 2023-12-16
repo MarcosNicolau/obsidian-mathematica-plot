@@ -79,9 +79,6 @@ export default class MathematicaPlot extends Plugin {
 							}));
 							new PlotModal(this, view.editor, settings, {
 								isEditing: true,
-								afterSubmit: () =>
-									//Set the cursor back to the selection of the codeblock
-									view.editor.setCursor(cursorPos),
 								onClose: () => view.editor.setCursor(cursorPos),
 							}).open();
 						}

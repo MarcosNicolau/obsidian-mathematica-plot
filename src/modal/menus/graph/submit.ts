@@ -19,7 +19,6 @@ export const renderSubmitBtn = (el: HTMLElement, modal: PlotModal) => {
 			.setButtonText("Submit")
 			.setCta()
 			.onClick(async () => {
-				modal.close();
 				const line = modal.editor.getCursor().line;
 				if (modal.options.isEditing) {
 					modal.editor.replaceSelection(
@@ -30,9 +29,10 @@ export const renderSubmitBtn = (el: HTMLElement, modal: PlotModal) => {
 						line,
 						`\`\`\`plot-mathematica \n${stringifyYaml(
 							cleanSettingStructure(modal.settings)
-						)}\`\`\``
+						)} \n \`\`\``
 					);
 				modal.options.afterSubmit(el);
+				modal.close();
 			})
 	);
 };
