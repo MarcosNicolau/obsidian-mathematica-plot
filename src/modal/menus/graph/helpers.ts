@@ -8,8 +8,12 @@ import {
 	PlotType,
 } from "types/plot";
 
+type Keys = {
+	desc: string;
+	name: string;
+};
 export type OptionsFields = {
-	[key in keyof Omit<Options3D, "others">]?: string;
+	[key in keyof Omit<Options3D, "others">]?: Keys;
 };
 
 export const renderOptions =
@@ -19,9 +23,10 @@ export const renderOptions =
 			text: `Plot Options ${settings.raster.dim}`,
 		});
 		Object.entries(optionsFields).forEach(
-			(entry: [keyof Options3D, string], index) =>
+			(entry: [keyof Options3D, Keys], index) =>
 				new Setting(index === 0 ? el : el.createDiv())
-					.setName(entry[1])
+					.setName(entry[1].name)
+					.setDesc(entry[1].desc)
 					.addText((component) =>
 						component
 							.setValue(options[entry[0]] || "")
@@ -33,7 +38,7 @@ export const renderOptions =
 		new Setting(el.createDiv())
 			.setName("Others")
 			.setDesc(
-				"Add any other option for the plot following the mathematica syntax"
+				"Add any other option for the plot following the mathematica syntax. For example: ClippingStyle -> Red, ScalingFunctions -> Reverse"
 			)
 			.addTextArea((component) =>
 				component.setValue(options.others || "").onChange((value) => {
@@ -45,10 +50,12 @@ export const renderOptions =
 export const renderIntervalForm = (
 	el: HTMLElement,
 	variable: string,
-	interval: Interval
+	interval: Interval,
+	desc: { min: string; max: string } = { min: "", max: "" }
 ) => {
 	new Setting(el.createDiv())
 		.setName(`${variable} min`)
+		.setDesc(desc.min)
 		.addText((component) =>
 			component.setValue(interval.min).onChange((value) => {
 				interval.min = value;
@@ -56,6 +63,7 @@ export const renderIntervalForm = (
 		);
 	new Setting(el.createDiv())
 		.setName(`${variable} max`)
+		.setDesc(desc.max)
 		.addText((component) =>
 			component.setValue(interval.max).onChange((value) => {
 				interval.max = value;
@@ -70,6 +78,7 @@ export const defaultGraphType = (): PlotType => ({
 	},
 	parametricPlot: {
 		components: [],
+		type: "curve",
 		domain: { u: { min: "", max: "" }, v: { min: "", max: "" } },
 	},
 	regionPlot: {
@@ -111,4 +120,12 @@ export const graphTypesOptions: { [key in GraphTypes]: string } = {
 	regionPlot: "Region Plot",
 	contourPlot: "Contour Plot",
 	vectorPlot: "Vector Plot",
+};
+
+export const graphTypeDescription: { [key in GraphTypes]: string } = {
+	plot: "Scalar functions",
+	parametricPlot: "Curves or Surfaces given in parametric form",
+	regionPlot: "Regions defined by inequalities",
+	contourPlot: "Contour plot for level sets",
+	vectorPlot: "Plot vectors from a vector field function",
 };

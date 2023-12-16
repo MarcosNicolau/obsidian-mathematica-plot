@@ -96,13 +96,14 @@ const mathematicaPlotParser3D: Parsers = {
 		const {
 			components,
 			domain: { u, v },
+			type,
 		} = parametricPlot;
 		const options = parseOptions(opts);
 		const base = (v: string) =>
 			`ParametricPlot3D[{${components.join()}}, {u, ${u.min}, ${
 				u.max
 			}} ${v} ${options}]`;
-		if (v.min && v.max) return base(`, {v, ${v.min}, ${v.max}}`);
+		if (type === "surface") return base(`, {v, ${v.min}, ${v.max}}`);
 		return base("");
 	},
 	plot: (plot: Plot, opts: Options3D) => {

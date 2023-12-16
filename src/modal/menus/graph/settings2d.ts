@@ -79,12 +79,12 @@ export const renderVectorPlotSettings = (
 	el: HTMLElement,
 	graph: VectorPlot
 ) => {
-	new Setting(el.createDiv()).setName("vx(x,y) = ").addTextArea((component) =>
+	new Setting(el.createDiv()).setName("Vx(x,y) = ").addTextArea((component) =>
 		component.setValue(graph.components[0]).onChange((value) => {
 			graph.components[0] = value;
 		})
 	);
-	new Setting(el.createDiv()).setName("vy(x,y) = ").addTextArea((component) =>
+	new Setting(el.createDiv()).setName("Vy(x,y) = ").addTextArea((component) =>
 		component.setValue(graph.components[1]).onChange((value) => {
 			graph.components[1] = value;
 		})
@@ -93,12 +93,27 @@ export const renderVectorPlotSettings = (
 	renderIntervalForm(el, "y", graph.domain.y);
 };
 
-const optsFields: OptionsFields = {
-	plotLabels: "Plot Labels",
-	plotLegends: "Plot Legends",
-	plotStyle: "Plot Style",
-	filling: "Filling",
-	fillingStyle: "Filling Style",
+export const optsFields2D: OptionsFields = {
+	plotLabels: {
+		name: "Plot Labels",
+		desc: "Labels to use for fields",
+	},
+	plotLegends: {
+		name: "Plot Legends",
+		desc: "Legends for fields",
+	},
+	plotStyle: {
+		name: "Plot Style",
+		desc: "Graphics directives to specify the style for each field",
+	},
+	filling: {
+		name: "Filling",
+		desc: "Filling to insert under each field",
+	},
+	fillingStyle: {
+		name: "Filling Style",
+		desc: "Style to use for filling ",
+	},
 };
 
 export const renders2D: RenderSettings = {
@@ -109,5 +124,5 @@ export const renders2D: RenderSettings = {
 		contourPlot: renderContourPlotSettings,
 		vectorPlot: renderVectorPlotSettings,
 	},
-	renderOptions: renderOptions(optsFields),
+	renderOptions: renderOptions(optsFields2D),
 };

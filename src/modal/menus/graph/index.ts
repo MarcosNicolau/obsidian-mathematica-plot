@@ -1,5 +1,6 @@
 import {
 	defaultGraph,
+	graphTypeDescription,
 	graphTypesOptions,
 	renderOptions,
 } from "modal/menus/graph/helpers";
@@ -98,7 +99,8 @@ export const render = (el: HTMLElement, modal: PlotModal, dim: Dimensions) => {
 					graph.type = value;
 					renderSelectedGraphSettings();
 				});
-			});
+			})
+			.setDesc(graphTypeDescription[graph.type]);
 
 		renderSettings[graph.type](selectedGraphEl, graph[graph.type]);
 

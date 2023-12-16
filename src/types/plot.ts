@@ -51,6 +51,7 @@ export type RegionPlot = {
 
 export type ParametricPlot = {
 	components: string[];
+	type: "curve" | "surface";
 	domain: {
 		u: Interval;
 		v: Interval;

@@ -12,7 +12,7 @@ const generalSettings: {
 	[key in keyof GeneralSettings]: GeneralSettingsFields;
 } = {
 	axes: {
-		desc: "",
+		desc: "Whether to draw axes",
 		name: "Axes",
 	},
 	axesLabel: {
@@ -21,16 +21,17 @@ const generalSettings: {
 	},
 	plotLabel: {
 		name: "Label",
+		desc: "Overall label for the plot",
 	},
 	frame: {
-		desc: "",
+		desc: "Whether to put a frame around the plot",
 		name: "Frame",
 	},
 	frameLabel: {
 		name: "Frame Label",
 	},
 	boxed: {
-		desc: "only for 3D graphics",
+		desc: "Whether to draw the bounding box for 3d graphics",
 		name: "Boxed",
 	},
 } as const;
