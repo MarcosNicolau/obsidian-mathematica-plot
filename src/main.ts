@@ -70,19 +70,16 @@ export default class MathematicaPlot extends Plugin {
 						el.parentElement
 							?.querySelector<HTMLElement>(".edit-block-button")
 							?.click();
-
-						if (view) {
-							const settings: PlotSettings = parseYaml(source);
-							// We need to add the default fields to the graphs
-							settings.graphs = settings.graphs.map((graph) => ({
-								...defaultGraphType(),
-								...graph,
-							}));
-							new PlotModal(this, view.editor, settings, {
-								isEditing: true,
-								onClose: () => view.editor.setCursor(cursorPos),
-							}).open();
-						}
+						const settings: PlotSettings = parseYaml(source);
+						// We need to add the default fields to the graphs
+						settings.graphs = settings.graphs.map((graph) => ({
+							...defaultGraphType(),
+							...graph,
+						}));
+						new PlotModal(this, view.editor, settings, {
+							isEditing: true,
+							onClose: () => view.editor.setCursor(cursorPos),
+						}).open();
 					});
 				button.extraSettingsEl.addClass("mathematica-plot-edit-btn");
 			}
