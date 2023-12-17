@@ -17,9 +17,8 @@ In order to use this plugin, **you must have installed wolframscript**. You can 
 
 To plot a graph, enter the command **Plot Graph** on the command pallete. Then just complete the fields, which accept Wolfram Mathematica code. I suggest checking their docs [here](https://reference.wolfram.com/language/guide/FunctionVisualization.html).
 
-https://github.com/MarcosNicolau/obsidian-mathematica-plot/assets/76252340/53c102e9-bebc-42d7-ac25-13f2b5c2aca0
-
-https://github.com/MarcosNicolau/obsidian-mathematica-plot/assets/76252340/bce73cc0-8092-4c4d-a96f-a737803dd785
+![showcase_1](./assets/showcase_1.gif)
+![showcase_2](./assets/showcase_2.gif)
 
 ## How to install
 
