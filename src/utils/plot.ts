@@ -26,18 +26,24 @@ export const getBase64Plot = async (
 	plot: string,
 	{ useCloud, wolframScriptPath }: GetBase64PlotSettings
 ): Promise<{ error: string; base64: string }> => {
-	const { stdout, stderr } = await promisify(exec)(
-		`${
-			wolframScriptPath ? '"' + wolframScriptPath + '"' : "wolframscript"
-		} ${
-			useCloud ? "--cloud" : ""
-		}  --code "ExportString[${plot}, {\\"Base64\\", \\"PNG\\"}]"`
-	);
-	if (stderr) return { error: stderr, base64: "" };
-	// If it is not a valid image, it means there was a mistake in the wolfram syntax
-	// So we return the base64 to debug the err, since it tells you whats wrong.
-	if (!isValidBase64(stdout)) return { error: stdout, base64: "" };
-	return { error: "", base64: stdout };
+	try {
+		const { stdout, stderr } = await promisify(exec)(
+			`${
+				wolframScriptPath
+					? '"' + wolframScriptPath + '"'
+					: "wolframscript"
+			} ${
+				useCloud ? "--cloud" : ""
+			}  --code "ExportString[${plot}, {\\"Base64\\", \\"PNG\\"}]"`
+		);
+		if (stderr) return { error: stderr, base64: "" };
+		// If it is not a valid image, it means there was a mistake in the wolfram syntax
+		// So we return the base64 to debug the err, since it tells you whats wrong.
+		if (!isValidBase64(stdout)) return { error: stdout, base64: "" };
+		return { error: "", base64: stdout };
+	} catch (err) {
+		return { error: err, base64: "" };
+	}
 };
 
 // Parses the YAML (codeblock) to Wolfram Mathematica
