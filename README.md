@@ -4,7 +4,7 @@ Obsidian Mathematica Plot is a plugin that allows you to plot mathematical graph
 
 ## Features
 
--   [x] Plot graphs using wolfram mathematica code
+-   [x] Plot graphs using Wolfram mathematica code
 -   [x] Plot 2D graphs
 -   [x] Plot 3D graphs
 -   [x] Preview graphs while editing
@@ -13,16 +13,17 @@ Obsidian Mathematica Plot is a plugin that allows you to plot mathematical graph
 
 ## How to use
 
-In order to use this plugin, **you must have installed wolframscript**. You can do it [here](https://reference.wolfram.com/language/workflow/InstallWolframScript.html).
+To use this plugin, **you must have installed wolframscript**. You can do it [here](https://reference.wolfram.com/language/workflow/InstallWolframScript.html).
 
-To plot a graph, enter the command **Plot Graph** on the command pallete. Then just complete the fields, which accept Wolfram Mathematica code. I suggest checking their docs [here](https://reference.wolfram.com/language/guide/FunctionVisualization.html).
+Enter the command **Plot Graph** on the command palette to plot a graph. Then complete the fields, which accept Wolfram Mathematica code. I suggest checking their docs [here](https://reference.wolfram.com/language/guide/FunctionVisualization.html).
 
-![showcase_1](./assets/showcase_1.gif)
-![showcase_2](./assets/showcase_2.gif)
+https://github.com/MarcosNicolau/obsidian-mathematica-plot/assets/76252340/53c102e9-bebc-42d7-ac25-13f2b5c2aca0
+
+https://github.com/MarcosNicolau/obsidian-mathematica-plot/assets/76252340/bce73cc0-8092-4c4d-a96f-a737803dd785
 
 ## How to install
 
-This is an Obsidian plugin like any other, and must be cloned or unzipped into your vault's .obsidian/plugins/ directory, then enabled in the Obsidian configuration. It's not registered as a standard community plugin for downloading or updating within Obsidian. Though it is in revision process.
+This is an Obsidian plugin like any other, and must be cloned or unzipped into your vault's .obsidian/plugins/ directory, then enabled in the Obsidian configuration. It's not registered as a standard community plugin for downloading or updating within Obsidian. Though it is in the revision process.
 
 1. Clone the project in .obsidian/plugins/
 2. Run `npm run build`
