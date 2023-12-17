@@ -1,3 +1,4 @@
+import { PLUGIN } from "_constants";
 import { PlotModal } from "modal/plotModal";
 import { Setting, stringifyYaml } from "obsidian";
 import { PlotSettings } from "types/plot";
@@ -27,7 +28,7 @@ export const renderSubmitBtn = (el: HTMLElement, modal: PlotModal) => {
 				} else
 					modal.editor.setLine(
 						line,
-						`\`\`\`plot-mathematica \n${stringifyYaml(
+						`\`\`\`${PLUGIN.CODEBLOCK_NAME} \n${stringifyYaml(
 							cleanSettingStructure(modal.settings)
 						)} \n \`\`\``
 					);

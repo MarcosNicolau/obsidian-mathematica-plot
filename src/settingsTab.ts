@@ -17,7 +17,7 @@ export class MathematicaPlotSettingsTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Use cloud")
 			.setDesc(
-				"Whether to pass --cloud option. If you don't have the wolfram engine set it to true."
+				"Whether to pass --cloud option. If you don't have the wolfram engine installed set it to true."
 			)
 			.addToggle((component) =>
 				component

@@ -139,7 +139,7 @@ const mathematicaPlotParser3D: Parsers = {
 
 const rasterizeParser = (code: string, settings: PlotSettings) => {
 	const generalOptions = parseOptions(settings.general);
-	return `Rasterize[GraphicsRow[{Show[${code} ${generalOptions}]}], ImageSize -> {${
+	return `Rasterize[Show[${code} ${generalOptions}], ImageSize -> {${
 		settings.raster?.size?.width || 250
 	}, ${settings.raster?.size?.height || "Automatic"}}, Background -> ${
 		settings.raster.background

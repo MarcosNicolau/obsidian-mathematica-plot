@@ -14,22 +14,41 @@ const defaultSettings: Options = {
 	afterSubmit: () => null,
 	onClose: () => null,
 };
+
+const defaultPlotSettings = (): PlotSettings => ({
+	raster: {
+		dim: "2D",
+		background: "None",
+		size: {
+			height: "Automatic",
+			width: "250",
+		},
+	},
+	general: {
+		axes: "True",
+		axesLabel: "{x, y}",
+		frame: "False",
+		boxed: "True",
+	},
+	graphs: [],
+});
+
 export class PlotModal extends Modal {
 	editor: Editor;
-	settings: PlotSettings;
+	settings: PlotSettings = defaultPlotSettings();
 	plugin: MathematicaPlot;
 	options: Options;
 
 	constructor(
 		plugin: MathematicaPlot,
 		editor: Editor,
-		settings: PlotSettings,
+		settings: PlotSettings | null,
 		options: Partial<Options>
 	) {
 		super(plugin.app);
 		this.plugin = plugin;
 		this.editor = editor;
-		this.settings = settings;
+		if (settings) this.settings = settings;
 		this.options = { ...defaultSettings, ...options };
 	}
 

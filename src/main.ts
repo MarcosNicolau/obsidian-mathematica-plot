@@ -13,28 +13,11 @@ import { MathematicaPlotSettings } from "types/plugin";
 import { renderGraph } from "graphRender";
 import { isReadingView } from "utils/editor";
 import { platform } from "os";
+import { PLUGIN } from "_constants";
 
 const DEFAULT_SETTINGS: MathematicaPlotSettings = {
 	useCloud: true,
 	wolframScriptPath: "",
-};
-
-const defaultPlotSettings: PlotSettings = {
-	raster: {
-		dim: "2D",
-		background: "None",
-		size: {
-			height: "Automatic",
-			width: "250",
-		},
-	},
-	general: {
-		axes: "True",
-		axesLabel: "{x, y}",
-		frame: "False",
-		boxed: "True",
-	},
-	graphs: [],
 };
 
 export default class MathematicaPlot extends Plugin {
@@ -47,11 +30,11 @@ export default class MathematicaPlot extends Plugin {
 			id: "plot-graph",
 			name: "Plot Graph",
 			editorCallback: (editor) => {
-				new PlotModal(this, editor, defaultPlotSettings, {}).open();
+				new PlotModal(this, editor, null, {}).open();
 			},
 		});
 		this.registerMarkdownCodeBlockProcessor(
-			"plot-mathematica",
+			PLUGIN.CODEBLOCK_NAME,
 			async (source, el) => {
 				const plotEl = el.createDiv({ cls: "mathematica-plot" });
 				await renderGraph(plotEl, source, {
