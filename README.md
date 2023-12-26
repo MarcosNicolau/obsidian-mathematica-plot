@@ -9,6 +9,7 @@ Obsidian Mathematica Plot is a plugin that allows you to plot mathematical graph
 -   [x] Plot 3D graphs
 -   [x] Preview graphs while editing
 -   [x] Edit already created graphs
+-   [ ] Create image file and wikilink (currently working on)
 -   [ ] Ability to plot several graphs in a row
 
 ## How to use
