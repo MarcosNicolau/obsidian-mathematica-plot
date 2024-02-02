@@ -99,7 +99,7 @@ export const renderParametricPlotSettings = (
 	const settingsEl = el.createDiv();
 
 	const renderSettings = () => {
-		settingsEl.innerHTML = "";
+		settingsEl.empty();
 		if (graph.type === "curve") renderParametricCurveSettings(settingsEl);
 		else renderParametricSurfaceSettings(settingsEl);
 	};

@@ -82,7 +82,7 @@ export const render = (el: HTMLElement, modal: PlotModal, dim: Dimensions) => {
 	const selectedGraphEl = el.createDiv();
 
 	const renderSelectedGraphSettings = () => {
-		selectedGraphEl.innerHTML = "";
+		selectedGraphEl.empty();
 		const graph = graphs.find(
 			(graph) =>
 				graph.id ===
@@ -111,7 +111,7 @@ export const render = (el: HTMLElement, modal: PlotModal, dim: Dimensions) => {
 };
 
 export const renderGraphSettings = (el: HTMLElement, modal: PlotModal) => {
-	el.innerHTML = "";
+	el.empty();
 	el.createEl("h5", { text: `Plot ${modal.settings.raster.dim}` });
 	render(el, modal, modal.settings.raster.dim);
 };
