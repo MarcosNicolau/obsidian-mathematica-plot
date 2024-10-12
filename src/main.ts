@@ -18,6 +18,7 @@ import { PLUGIN } from "_constants";
 const DEFAULT_SETTINGS: MathematicaPlotSettings = {
 	useCloud: true,
 	wolframScriptPath: "",
+	showConfirmImageModal: true,
 };
 
 export default class MathematicaPlot extends Plugin {
